@@ -11,6 +11,10 @@ import SwiftUI
 public struct BannerAd: View {
     let ad: Banner
     
+    public init (ad: Banner) {
+        self.ad = ad
+    }
+    
     public var body: some View {
         let vm = BaseWebViewVM()
         SwiftUIWebView(viewModel: vm)

@@ -9,9 +9,9 @@ import SwiftUI
 @MainActor
 @available(iOS 13.0, *)
 public class AdViewModel: ObservableObject {
-    @Published var rewardAds: [Reward] = []
-    @Published var bannerAds: [Banner] = []
-    @Published var adType: AdType = .BANNER
+    @Published public var rewardAds: [Reward] = []
+    @Published public var bannerAds: [Banner] = []
+    @Published public var adType: AdType = .BANNER
     
     @Published var isVideoPlaying: Bool = false
     @Published var isSurveyPanelShowed: Bool = false
@@ -23,7 +23,7 @@ public class AdViewModel: ObservableObject {
     @Published var videoUrl: String?
     @Published var surveyUrl: String?
     
-    @Published var callback: Callback?
+    @Published public var callback: Callback?
     
     let mediaId: String
     let userId: String
@@ -31,7 +31,7 @@ public class AdViewModel: ObservableObject {
     let tagGroupId: String
     let runMode: RunMode
     
-    init(mediaId: String, userId: String, crypto: String, tagGroupId: String, runMode: RunMode, callback: Callback? = nil) {
+    public init(mediaId: String, userId: String, crypto: String, tagGroupId: String, runMode: RunMode, callback: Callback? = nil) {
         self.mediaId = mediaId
         self.userId = userId
         self.crypto = crypto
@@ -43,7 +43,7 @@ public class AdViewModel: ObservableObject {
         }
     }
     
-    func fetchAds() async -> String {
+    public func fetchAds() async -> String {
         do {
             let body = RewardAdsRequestBody(
                 user: .init(id: userId),
@@ -67,6 +67,11 @@ public class AdViewModel: ObservableObject {
 public struct Callback {
     var onMarkSucceeded: () -> Void?
     var onRewardModalClosed: () -> Void?
+    
+    public init(onMarkSucceeded: @escaping () -> Void?, onRewardModalClosed: @escaping () -> Void?) {
+        self.onMarkSucceeded = onMarkSucceeded
+        self.onRewardModalClosed = onRewardModalClosed
+    }
 }
 
 public enum RunMode: String {

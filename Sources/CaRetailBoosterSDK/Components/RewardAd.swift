@@ -12,6 +12,10 @@ public struct RewardAd: View {
     @State var showErrorAlert: Bool = false
     let ad: Reward
     
+    public init(ad: Reward) {
+        self.ad = ad
+    }
+    
     public var body: some View {
         let vm = BaseWebViewVM()
         if #available(iOS 15.0, *) {

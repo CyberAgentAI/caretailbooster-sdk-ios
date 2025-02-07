@@ -71,7 +71,7 @@ enum VideoType: String {
 }
 
 public struct Reward: Decodable {
-    let index: Int
+    public let index: Int
     let tag_id: String
     let format_type: String
     let video_type: String?
@@ -83,7 +83,7 @@ public struct Reward: Decodable {
 }
 
 public struct Banner: Decodable {
-    let index: Int
+    public let index: Int
     let tag_id: String
     let width: Int
     let height: Int
@@ -103,7 +103,7 @@ public struct GetRewardResponse {
     let bannerAds: [Banner]
 }
 
-enum AdType: String {
+public enum AdType: String {
     case BANNER
     case REWARD
 }
