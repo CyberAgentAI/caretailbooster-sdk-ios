@@ -35,6 +35,7 @@ public struct VideoRewardView: View {
     }
 }
 
+@available(iOS 13.0, *)
 #Preview {
     VideoRewardView(isAdCallStatus: true, landingPageUrl: "http://localhost:3000/coupon/1")
         .environmentObject(AdViewModel(mediaId: "media1", userId: "user1", crypto: "crypto1", tagGroupId: "reward1", runMode: RunMode.stg))

@@ -48,6 +48,7 @@ struct SwiftUIWebView: UIViewRepresentable {
     }
 }
 
+@available(iOS 13.0, *)
 extension SwiftUIWebView {
     class Coordinator: NSObject, WKUIDelegate,
                        WKScriptMessageHandler, WKNavigationDelegate {
@@ -79,6 +80,7 @@ extension SwiftUIWebView {
     }
 }
 
+@available(iOS 13.0, *)
 struct SwiftUIWebView_Previews: PreviewProvider {
     static let vm = BaseWebViewVM(webResource: "ad.html",
                                   ad: Reward(

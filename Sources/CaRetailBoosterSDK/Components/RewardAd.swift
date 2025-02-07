@@ -154,21 +154,17 @@ public struct RewardAd: View {
                 .environmentObject(viewModel)
         }
     }.onAppear {
-        do {
-            let body = RewardAdsRequestBody(
-                user: .init(id: "user1"),
-                publisher: .init(id: "publisherId", crypto: "crypto"),
-                tagInfo: .init(tagGroupId: "reward1"),
-                device: .init(make: DeviceInfo.make, os: DeviceInfo.os, osv: DeviceInfo.osVerion, hwv: DeviceInfo.hwv, h: DeviceInfo.height, w: DeviceInfo.width, language: DeviceInfo.language, ifa: DeviceInfo.ifa)
-            )
-            Task {
-                let res = try await getAds(runMode: RunMode.stg, body: body)
-                let ordered = res.rewardAds.sorted{$0.index < $1.index}
-                print("ordered: \(ordered)")
-                ads = ordered
-            }
-        } catch {
-            print("Error: \(error)")
+        let body = RewardAdsRequestBody(
+            user: .init(id: "user1"),
+            publisher: .init(id: "publisherId", crypto: "crypto"),
+            tagInfo: .init(tagGroupId: "reward1"),
+            device: .init(make: DeviceInfo.make, os: DeviceInfo.os, osv: DeviceInfo.osVerion, hwv: DeviceInfo.hwv, h: DeviceInfo.height, w: DeviceInfo.width, language: DeviceInfo.language, ifa: DeviceInfo.ifa)
+        )
+        Task {
+            let res = try await getAds(runMode: RunMode.stg, body: body)
+            let ordered = res.rewardAds.sorted{$0.index < $1.index}
+            print("ordered: \(ordered)")
+            ads = ordered
         }
     }
 }

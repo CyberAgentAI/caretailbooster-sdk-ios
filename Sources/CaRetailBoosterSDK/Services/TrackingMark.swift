@@ -163,6 +163,7 @@ public struct AdsRequest: Codable {
 
 public typealias RewardAdsRequestBody = AdsRequest
 
+@MainActor
 @available(iOS 13.0, *)
 public func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws -> GetRewardResponse {
     var url = STG_AD_SERVER_URL

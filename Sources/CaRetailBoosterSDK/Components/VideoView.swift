@@ -3,6 +3,7 @@ import AVKit
 import NotificationCenter
 
 
+@available(iOS 13.0, *)
 // Create a UIViewControllerRepresentable for AVPlayer
 struct AVPlayerView: UIViewControllerRepresentable {
     let player: AVPlayer
@@ -18,6 +19,7 @@ struct AVPlayerView: UIViewControllerRepresentable {
     }
 }
 
+@MainActor
 @available(iOS 13.0, *)
 public struct VideoView: View {
     @EnvironmentObject var rewardAdVm: AdViewModel
@@ -118,49 +120,53 @@ public struct VideoView: View {
                         let currentTime = time.seconds
                         let minutes = Int(currentTime) / 60
                         let seconds = Int(currentTime) % 60
-                        timeText = String(format: "%02d:%02d / %02d:%02d", minutes, seconds, Int(videoDuration) / 60, Int(videoDuration) % 60)
-                        
-                        
-                        let position = Int(floor((time.seconds / videoDuration) * 100))
-                        print("position(%):", position)
-                        
-                        // 25%再生時のイベントをトラッキングサーバーに送信
-                        if position >= 25 && !is25PercentSent {
-                            Task {
-                                do {
-                                    try await AdTracking.view(endpoint: rewardAdVm.currentAd?.view_url ?? "", param: rewardAdVm.currentAd?.param ?? "", videoProgressEvent: VideoProgressEvent.quarter)
-                                } catch {
-                                    print("Error: \(error)")
-                                    NotificationCenter.default.post(name: NSNotification.Alert, object: nil)
+                        Task {
+                            await MainActor.run {
+                                timeText = String(format: "%02d:%02d / %02d:%02d", minutes, seconds, Int(videoDuration) / 60, Int(videoDuration) % 60)
+                                
+                                
+                                let position = Int(floor((time.seconds / videoDuration) * 100))
+                                print("position(%):", position)
+                                
+                                // 25%再生時のイベントをトラッキングサーバーに送信
+                                if position >= 25 && !is25PercentSent {
+                                    Task {
+                                        do {
+                                            try await AdTracking.view(endpoint: rewardAdVm.currentAd?.view_url ?? "", param: rewardAdVm.currentAd?.param ?? "", videoProgressEvent: VideoProgressEvent.quarter)
+                                        } catch {
+                                            print("Error: \(error)")
+                                            NotificationCenter.default.post(name: NSNotification.Alert, object: nil)
+                                        }
+                                    }
+                                    is25PercentSent = true
+                                }
+                                
+                                // 50%再生時のイベントをトラッキングサーバーに送信
+                                if position >= 50 && !is50PercentSent {
+                                    Task {
+                                        do {
+                                            try await AdTracking.view(endpoint: rewardAdVm.currentAd?.view_url ?? "", param: rewardAdVm.currentAd?.param ?? "", videoProgressEvent: VideoProgressEvent.half)
+                                        } catch {
+                                            print("Error: \(error)")
+                                            NotificationCenter.default.post(name: NSNotification.Alert, object: nil)
+                                        }
+                                    }
+                                    is50PercentSent = true
+                                }
+                                
+                                // 75%再生時のイベントをトラッキングサーバーに送信
+                                if position >= 75 && !is75PercentSent {
+                                    Task {
+                                        do {
+                                            try await AdTracking.view(endpoint: rewardAdVm.currentAd?.view_url ?? "", param: rewardAdVm.currentAd?.param ?? "", videoProgressEvent: VideoProgressEvent.threeQuarter)
+                                        } catch {
+                                            print("Error: \(error)")
+                                            NotificationCenter.default.post(name: NSNotification.Alert, object: nil)
+                                        }
+                                    }
+                                    is75PercentSent = true
                                 }
                             }
-                            is25PercentSent = true
-                        }
-                        
-                        // 50%再生時のイベントをトラッキングサーバーに送信
-                        if position >= 50 && !is50PercentSent {
-                            Task {
-                                do {
-                                    try await AdTracking.view(endpoint: rewardAdVm.currentAd?.view_url ?? "", param: rewardAdVm.currentAd?.param ?? "", videoProgressEvent: VideoProgressEvent.half)
-                                } catch {
-                                    print("Error: \(error)")
-                                    NotificationCenter.default.post(name: NSNotification.Alert, object: nil)
-                                }
-                            }
-                            is50PercentSent = true
-                        }
-                        
-                        // 75%再生時のイベントをトラッキングサーバーに送信
-                        if position >= 75 && !is75PercentSent {
-                            Task {
-                                do {
-                                    try await AdTracking.view(endpoint: rewardAdVm.currentAd?.view_url ?? "", param: rewardAdVm.currentAd?.param ?? "", videoProgressEvent: VideoProgressEvent.threeQuarter)
-                                } catch {
-                                    print("Error: \(error)")
-                                    NotificationCenter.default.post(name: NSNotification.Alert, object: nil)
-                                }
-                            }
-                            is75PercentSent = true
                         }
                     })
                 }

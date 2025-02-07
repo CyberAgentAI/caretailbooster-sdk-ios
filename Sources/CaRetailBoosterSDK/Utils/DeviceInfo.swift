@@ -9,7 +9,7 @@ import Foundation
 import AdSupport
 import UIKit
 
-
+@MainActor
 struct DeviceInfo {
     static var make: String {
         "Apple"
