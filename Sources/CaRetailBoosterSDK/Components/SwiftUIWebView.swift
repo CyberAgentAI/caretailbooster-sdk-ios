@@ -31,6 +31,11 @@ struct SwiftUIWebView: UIViewRepresentable {
         
         vm.webView.navigationDelegate = context.coordinator
         
+        // background color setting
+        vm.webView.isOpaque = false
+        vm.webView.backgroundColor = .clear
+        vm.webView.scrollView.backgroundColor = .clear
+        
         return vm.webView
     }
     

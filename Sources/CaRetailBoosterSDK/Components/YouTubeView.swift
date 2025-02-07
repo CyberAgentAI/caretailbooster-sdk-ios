@@ -27,10 +27,12 @@ public struct YouTubeView: View {
         VStack {
             SwiftUIWebView(viewModel: vm)
                 .onAppear() {
+                    vm.rewardVm = rewardAdVm
                     // YouTube再生用WebページのURLをロードする
                     vm.loadWebPage(webResource: videoUrl)
                 }
         }
+        // TODO: 再生中は背景を黒にし、再生終了後投下させるUIを実装する.
         .background(Color.black)
     }
 }

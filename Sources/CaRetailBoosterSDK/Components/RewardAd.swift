@@ -73,9 +73,9 @@ public struct RewardAd: View {
                     SwiftUIWebView(viewModel: vm)
                         .onAppear() {
                             vm.rewardVm = adVm
-                            vm.loadWebPage(webResource: ad.webview_url.interruption)
+                            vm.loadWebPage(webResource: adVm.currentAd?.webview_url.interruption ?? "")
                         }
-                        .frame(width: 200, height: 150, alignment: .center)
+                        .frame(alignment: .center)
                 }
                 .background(TransparentBackgroundView())
             })
@@ -138,7 +138,7 @@ public struct RewardAd: View {
                             vm.rewardVm = adVm
                             vm.loadWebPage(webResource: ad.webview_url.interruption)
                         }
-                        .frame(width: 200, height: 150, alignment: .center)
+                        .frame(alignment: .center)
                 }
                 .background(TransparentBackgroundView())
             })

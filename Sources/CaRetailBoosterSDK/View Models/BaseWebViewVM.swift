@@ -115,6 +115,7 @@ class BaseWebViewVM: ObservableObject {
                 rewardVm?.isRewardCoverOpened = false
             }
             
+            rewardVm?.isVideoPlaying = false
             rewardVm?.isVideoInterrupted = false
         case .onMarkSuccess:
             // マーク完了をSDKユーザーに通知
