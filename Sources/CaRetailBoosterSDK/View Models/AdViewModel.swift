@@ -24,6 +24,7 @@ public class AdViewModel: ObservableObject {
     @Published var surveyUrl: String?
     
     @Published public var callback: Callback?
+    @Published public var options: Options?
     
     let mediaId: String
     let userId: String
@@ -31,7 +32,7 @@ public class AdViewModel: ObservableObject {
     let tagGroupId: String
     let runMode: RunMode
     
-    public init(mediaId: String, userId: String, crypto: String, tagGroupId: String, runMode: RunMode, callback: Callback? = nil) {
+    public init(mediaId: String, userId: String, crypto: String, tagGroupId: String, runMode: RunMode, callback: Callback? = nil, options: Options? = nil) {
         self.mediaId = mediaId
         self.userId = userId
         self.crypto = crypto
@@ -40,6 +41,9 @@ public class AdViewModel: ObservableObject {
         
         if let callback = callback {
             self.callback = callback
+        }
+        if let options = options {
+            self.options = options
         }
     }
     
@@ -71,6 +75,25 @@ public struct Callback {
     public init(onMarkSucceeded: @escaping () -> Void?, onRewardModalClosed: @escaping () -> Void?) {
         self.onMarkSucceeded = onMarkSucceeded
         self.onRewardModalClosed = onRewardModalClosed
+    }
+}
+
+// 必要なOptionは随時追加していく
+public struct Options {
+    var rewardAd: RewardAdOption?
+    
+    public init(rewardAd: RewardAdOption? = nil) {
+        self.rewardAd = rewardAd
+    }
+}
+
+public struct RewardAdOption {
+    var width: CGFloat?
+    var height: CGFloat?
+    
+    public init(width: Int?, height: Int?) {
+        self.width = width != nil ? CGFloat(width!) : nil
+        self.height = height != nil ? CGFloat(height!) : nil
     }
 }
 
