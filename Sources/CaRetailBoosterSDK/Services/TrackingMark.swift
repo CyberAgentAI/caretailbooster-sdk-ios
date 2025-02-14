@@ -166,9 +166,16 @@ public typealias RewardAdsRequestBody = AdsRequest
 @MainActor
 @available(iOS 13.0, *)
 public func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws -> GetRewardResponse {
-    var url = STG_AD_SERVER_URL
-    if runMode == RunMode.prd {
+    let url: String
+    switch runMode {
+    case RunMode.dev:
+        url = DEV_AD_SERVER_URL
+    case RunMode.stg:
+        url = STG_AD_SERVER_URL
+    case RunMode.prd:
         url = PRD_AD_SERVER_URL
+    default:
+        url = LOCAL_AD_SERVER_URL
     }
     let components = URLComponents(string: url)!
     guard let url = components.url else {

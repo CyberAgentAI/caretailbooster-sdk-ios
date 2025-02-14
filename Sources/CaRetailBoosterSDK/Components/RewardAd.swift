@@ -25,7 +25,7 @@ public struct RewardAd: View {
                     vm.rewardVm = adVm
                     vm.loadWebPage(webResource: ad.webview_url.contents)
                 })
-                .frame(width: 200, height: 220)
+                .frame(width: adVm.options?.rewardAd?.width ?? 173, height: adVm.options?.rewardAd?.height ?? 210)
                 .onReceive(NotificationCenter.default.publisher(for: NSNotification.Alert))
             { data in
                 print("Alert notification received")
@@ -87,7 +87,7 @@ public struct RewardAd: View {
                     vm.rewardVm = adVm
                     vm.loadWebPage(webResource: ad.webview_url.contents)
                 })
-                .frame(width: 200, height: 220)
+                .frame(width: adVm.options?.rewardAd?.width ?? 173, height: adVm.options?.rewardAd?.height ?? 210)
                 .onReceive(NotificationCenter.default.publisher(for: NSNotification.Alert))
             { data in
                 print("Alert notification received")
