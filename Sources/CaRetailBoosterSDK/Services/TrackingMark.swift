@@ -175,7 +175,7 @@ public func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws ->
     case RunMode.prd:
         url = PRD_AD_SERVER_URL
     default:
-        url = DEBUG_AD_SERVER_URL
+        url = LOCAL_AD_SERVER_URL
     }
     let components = URLComponents(string: url)!
     guard let url = components.url else {

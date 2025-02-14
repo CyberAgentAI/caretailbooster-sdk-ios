@@ -98,7 +98,7 @@ public struct RewardAdOption {
 }
 
 public enum RunMode: String {
-    case debug
+    case local
     case dev
     case stg
     case prd
