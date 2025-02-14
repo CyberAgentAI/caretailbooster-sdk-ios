@@ -75,6 +75,8 @@ public struct Callback {
 }
 
 public enum RunMode: String {
+    case debug
+    case dev
     case stg
     case prd
 }
