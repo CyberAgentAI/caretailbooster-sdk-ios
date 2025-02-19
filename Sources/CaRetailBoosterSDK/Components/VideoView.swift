@@ -27,11 +27,13 @@ public struct VideoView: View {
     var player: AVPlayer
     @State var timeText: String = ""
     var videoDuration: Double = 0
-    @State var isMuted: Bool = false
+    @State var isMuted: Bool = true
     
     init(isEnded: Binding<Bool>, videoUrl: String) {
         player = AVPlayer(url: URL(string: videoUrl)!)
         _isEnded = isEnded
+        // ミュート状態で再生を開始
+        player.isMuted = true
         
         // トータルの再生時間取得
         // TODO 計算に時間がかかってUIをブロッキングするのでadのdurationを使う
@@ -56,7 +58,7 @@ public struct VideoView: View {
                 }, label: {
                     Image(systemName: $isMuted.wrappedValue ? "speaker.slash" : "speaker.3")
                         .resizable()
-                        .frame(width: 20, height: 20)
+                        .frame(width: 28, height: 28)
                         .foregroundColor(.white)
                 })
                 .padding(.leading, 10)
@@ -73,7 +75,7 @@ public struct VideoView: View {
                 }, label: {
                     Image(systemName: "xmark")
                         .resizable()
-                        .frame(width: 20, height: 20)
+                        .frame(width: 24, height: 24)
                         .foregroundColor(.white)
                 })
                 .padding(.trailing, 10)
