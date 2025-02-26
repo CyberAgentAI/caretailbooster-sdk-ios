@@ -102,4 +102,5 @@ public enum RunMode: String {
     case dev
     case stg
     case prd
+    case mock
 }

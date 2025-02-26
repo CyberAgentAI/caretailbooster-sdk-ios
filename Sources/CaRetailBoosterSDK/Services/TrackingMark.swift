@@ -174,6 +174,8 @@ public func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws ->
         url = STG_AD_SERVER_URL
     case RunMode.prd:
         url = PRD_AD_SERVER_URL
+    case RunMode.mock:
+        url = MOCK_AD_SERVER_URL
     default:
         url = LOCAL_AD_SERVER_URL
     }
