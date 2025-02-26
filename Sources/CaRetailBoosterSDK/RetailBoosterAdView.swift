@@ -10,8 +10,8 @@ import SwiftUI
 public struct RetailBoosterAdView: View {
     @ObservedObject var adVm: AdViewModel
     
-    public init(mediaId: String, userId: String, crypto: String, tagGroupId: String, runMode: RunMode, callback: Callback? = nil, options: Options? = nil) {
-        self.adVm = AdViewModel(mediaId: mediaId, userId: userId, crypto: crypto, tagGroupId: tagGroupId, runMode: runMode, callback: callback, options: options)
+    public init(mediaId: String, userId: String, crypto: String, tagGroupId: String, mode: RunMode, callback: Callback? = nil, options: Options? = nil) {
+        self.adVm = AdViewModel(mediaId: mediaId, userId: userId, crypto: crypto, tagGroupId: tagGroupId, runMode: mode, callback: callback, options: options)
     }
     
     public var body: some View {

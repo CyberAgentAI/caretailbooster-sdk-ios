@@ -19,14 +19,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
             let contentView = VStack {
                 Text("Reward Ads")
-                RetailBoosterAdView(mediaId: "media1", userId: "user1", crypto: "crypto1", tagGroupId: "reward1", runMode: RunMode.local, callback: Callback(onMarkSucceeded: {
+                RetailBoosterAdView(mediaId: "media1", userId: "user1", crypto: "crypto1", tagGroupId: "reward1", mode: RunMode.mock, callback: Callback(onMarkSucceeded: {
                     print("onMarkSucceeded")
                 }, onRewardModalClosed: {
                     print("onRewardModalClosed")
                 }))
                 
                 Text("Banner Ads")
-                RetailBoosterAdView(mediaId: "media1", userId: "user1", crypto: "crypto1", tagGroupId: "banner1", runMode: RunMode.local)
+                RetailBoosterAdView(mediaId: "media1", userId: "user1", crypto: "crypto1", tagGroupId: "banner1", mode: RunMode.mock)
             }
                 .background(Color.blue.opacity(0.2))
             
