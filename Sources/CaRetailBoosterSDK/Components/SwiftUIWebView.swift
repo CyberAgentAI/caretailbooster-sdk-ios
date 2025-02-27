@@ -36,6 +36,11 @@ struct SwiftUIWebView: UIViewRepresentable {
         vm.webView.backgroundColor = .clear
         vm.webView.scrollView.backgroundColor = .clear
         
+        // window.open()を許可
+        vm.webView.uiDelegate = context.coordinator
+        vm.webView.navigationDelegate = context.coordinator
+        
+        
         return vm.webView
     }
     
@@ -64,6 +69,14 @@ extension SwiftUIWebView {
         ) {
             // Web view finished loading content
             print("web view loaded")
+        }
+        
+        // `window.open()` のリクエストを Safari で開く
+        func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+            if let url = navigationAction.request.url {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+            return nil
         }
         
         var viewModel: BaseWebViewVM
