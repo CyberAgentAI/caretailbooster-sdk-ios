@@ -45,7 +45,7 @@ enum VideoProgressEvent {
         case .half:
             return "half"
         case .threeQuarter:
-            return "threeQuarter"
+            return "three-quarter"
         case .end:
             return "end"
         }
