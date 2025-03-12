@@ -10,6 +10,7 @@ struct OnClickAdMessage: Decodable {
 
 enum MessageHandler: String, CaseIterable {
     case playVideo
+    case playVideoSurvey
     case showModal
     case closeModal
     case onMarkSuccess
@@ -27,7 +28,6 @@ class BaseWebViewVM: ObservableObject {
     
     @Published var showPanel: Bool = false
     @Published var isSurveyPanelShowed: Bool = false
-    @Published var isSurveyAnswerd: Bool = false
     
     var adVm: BaseWebViewVM?
     
@@ -99,8 +99,13 @@ class BaseWebViewVM: ObservableObject {
                 rewardVm?.videoUrl = message
                 rewardVm?.isVideoPlaying = true
             }
+        case .playVideoSurvey:
+            if ad != nil {
+                rewardVm?.currentAd = ad
+                rewardVm?.videoSurveyUrl = message
+                rewardVm?.isVideoSurveyPlaying = true
+            }
         case .showModal:
-            print("show survey")
             self.isSurveyPanelShowed = true
             
             if ad != nil {
@@ -116,6 +121,7 @@ class BaseWebViewVM: ObservableObject {
             }
             
             rewardVm?.isVideoPlaying = false
+            rewardVm?.isVideoSurveyPlaying = false
             rewardVm?.isVideoInterrupted = false
         case .onMarkSuccess:
             // マーク完了をSDKユーザーに通知

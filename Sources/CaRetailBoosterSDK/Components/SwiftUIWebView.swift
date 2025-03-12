@@ -21,6 +21,7 @@ struct SwiftUIWebView: UIViewRepresentable {
         // Message handler without reply
         userContentController.add(context.coordinator, name: MessageHandler.playVideo.rawValue)
         userContentController.add(context.coordinator, name: MessageHandler.showModal.rawValue)
+        userContentController.add(context.coordinator, name: MessageHandler.playVideoSurvey.rawValue)
         userContentController.add(context.coordinator, name: MessageHandler.closeModal.rawValue)
         userContentController.add(context.coordinator, name: MessageHandler.onMarkSuccess.rawValue)
         userContentController.add(context.coordinator, name: MessageHandler.onRewardFinish.rawValue)
