@@ -117,6 +117,18 @@ public struct RewardAd: View {
                             .environmentObject(adVm)
                     }
                 })
+            .sheet(
+                isPresented: $adVm.isVideoSurveyPlaying,
+                content: {
+                    let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd)
+                    VStack {
+                        SwiftUIWebView(viewModel: videoSurveyVm)
+                            .onAppear() {
+                                videoSurveyVm.rewardVm = adVm
+                                videoSurveyVm.loadWebPage(webResource: adVm.videoSurveyUrl ?? "")
+                            }
+                }.background(Color.black.opacity(0.5))
+            })
             .sheet(isPresented: $adVm.isSurveyPanelShowed, content: {
                 let surveyVm = BaseWebViewVM(ad: adVm.currentAd)
                 VStack {
