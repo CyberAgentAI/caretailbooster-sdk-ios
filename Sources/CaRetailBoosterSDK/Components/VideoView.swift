@@ -74,7 +74,7 @@ public struct VideoView: View {
                     
                     // 途中で再生を停止した場合、リワードを獲得できない旨をユーザーに通知する
                     // 獲得済みの場合は通知しない
-                    rewardAdVm.isVideoInterrupted = self.isGranted ? false : true
+                    rewardAdVm.isVideoInterrupted = !self.isGranted
                 }, label: {
                     Image(systemName: "xmark")
                         .resizable()
@@ -102,7 +102,7 @@ public struct VideoView: View {
                     isEnded = true
                     rewardAdVm.isVideoPlaying = false
                     // 獲得済みの場合、リワード獲得UIは表示しない
-                    rewardAdVm.isRewardCoverOpened = self.isGranted ? false : true
+                    rewardAdVm.isRewardCoverOpened = !self.isGranted
                 })
                 .onAppear {
                     player.play()
