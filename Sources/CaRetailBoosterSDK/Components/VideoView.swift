@@ -28,12 +28,14 @@ public struct VideoView: View {
     @State var timeText: String = ""
     var videoDuration: Double = 0
     @State var isMuted: Bool = true
+    var isGranted: Bool = false
     
-    init(isEnded: Binding<Bool>, videoUrl: String) {
+    init(isEnded: Binding<Bool>, videoUrl: String, isGranted: Bool) {
         player = AVPlayer(url: URL(string: videoUrl)!)
         _isEnded = isEnded
         // ミュート状態で再生を開始
         player.isMuted = true
+        self.isGranted = isGranted
         
         // トータルの再生時間取得
         // TODO 計算に時間がかかってUIをブロッキングするのでadのdurationを使う
@@ -71,7 +73,8 @@ public struct VideoView: View {
                     rewardAdVm.isVideoPlaying = false
                     
                     // 途中で再生を停止した場合、リワードを獲得できない旨をユーザーに通知する
-                    rewardAdVm.isVideoInterrupted = true
+                    // 獲得済みの場合は通知しない
+                    rewardAdVm.isVideoInterrupted = self.isGranted ? false : true
                 }, label: {
                     Image(systemName: "xmark")
                         .resizable()
@@ -98,7 +101,8 @@ public struct VideoView: View {
                     // モーダルを閉じる
                     isEnded = true
                     rewardAdVm.isVideoPlaying = false
-                    rewardAdVm.isRewardCoverOpened = true
+                    // 獲得済みの場合、リワード獲得UIは表示しない
+                    rewardAdVm.isRewardCoverOpened = self.isGranted ? false : true
                 })
                 .onAppear {
                     player.play()
@@ -193,7 +197,8 @@ public struct VideoView: View {
     
     VideoView(
         isEnded: .constant(false),
-        videoUrl: "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4"
+        videoUrl: "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
+        isGranted: false
     )
     .onAppear {
         vm.currentAd = Reward(index: 1, tag_id: "tag-id1", format_type: AdFormatType.VIDEO.rawValue, video_type: VideoType.STANDARD.rawValue, is_granted: true, webview_url: AdWebViewUrl(contents: "http://localhost:3000/reward.html", getting: "http://localhost:3000/survey.html", interruption: "http://localhost:3000/message/interrupt"), imp_url: "http://localhost:3000/api/imp/imp", view_url: "http://localhost:3000/api/view/view", param: "param1")
