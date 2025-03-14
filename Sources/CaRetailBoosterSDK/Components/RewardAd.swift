@@ -39,7 +39,7 @@ public struct RewardAd: View {
                         YouTubeView(isEnded: .constant(false), videoUrl: adVm.videoUrl ?? "")
                             .environmentObject(adVm)
                     } else {
-                        VideoView(isEnded: .constant(false), videoUrl: adVm.videoUrl ?? "")
+                        VideoView(isEnded: .constant(false), videoUrl: adVm.videoUrl ?? "", isGranted: adVm.currentAd?.is_granted ?? false)
                             .environmentObject(adVm)
                     }
                 })
@@ -113,7 +113,7 @@ public struct RewardAd: View {
                         YouTubeView(isEnded: .constant(false), videoUrl: adVm.videoUrl ?? "")
                             .environmentObject(adVm)
                     } else {
-                        VideoView(isEnded: .constant(false), videoUrl: adVm.videoUrl ?? "")
+                        VideoView(isEnded: .constant(false), videoUrl: adVm.videoUrl ?? "", isGranted: adVm.currentAd?.is_granted ?? false)
                             .environmentObject(adVm)
                     }
                 })
