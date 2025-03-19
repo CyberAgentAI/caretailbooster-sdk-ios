@@ -23,6 +23,7 @@ public struct RewardAd: View {
                 .onAppear(perform: {
                     vm.ad = ad
                     vm.rewardVm = adVm
+                    vm.enableImpTracking(adType: .REWARD)
                     vm.loadWebPage(webResource: ad.webview_url.contents)
                 })
                 .frame(width: adVm.options?.rewardAd?.width ?? 173, height: adVm.options?.rewardAd?.height ?? 210)
@@ -32,6 +33,9 @@ public struct RewardAd: View {
                 // TODO: エラー通知
                 showErrorAlert = true
             }
+            .onDisappear(perform: {
+                vm.stopTracking()
+            })
             .fullScreenCover(
                 isPresented: $adVm.isVideoPlaying,
                 content: {
@@ -97,6 +101,7 @@ public struct RewardAd: View {
                 .onAppear(perform: {
                     vm.ad = ad
                     vm.rewardVm = adVm
+                    vm.enableImpTracking(adType: .REWARD)
                     vm.loadWebPage(webResource: ad.webview_url.contents)
                 })
                 .frame(width: adVm.options?.rewardAd?.width ?? 173, height: adVm.options?.rewardAd?.height ?? 210)
@@ -106,6 +111,9 @@ public struct RewardAd: View {
                 // TODO: エラー通知
                 showErrorAlert = true
             }
+            .onDisappear(perform: {
+                vm.stopTracking()
+            })
             .sheet(
                 isPresented: $adVm.isVideoPlaying,
                 content: {

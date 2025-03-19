@@ -45,6 +45,11 @@ class BaseWebViewVM: ObservableObject {
     
     var youtubeVideoId: String?
     
+    // Tracking用のパラメータ
+    var enableTracking: Bool = false
+    var trackingEndpoint: String?
+    var trackingParam: String?
+    
     init(webResource: String? = nil, rewardVm: AdViewModel? = nil, onVideoStart: (() -> Void)? = nil, ad: Reward? = nil, youtubeVideoId: String? = nil) {
         self.webResource = webResource
         
@@ -144,6 +149,31 @@ class BaseWebViewVM: ObservableObject {
             if let error = error {
                 print("Error: \(error.localizedDescription)")
             }
+        }
+    }
+    
+    func enableImpTracking(adType: AdType) {
+        enableTracking = true
+        trackingEndpoint = if adType == .REWARD {
+            ad?.imp_url ?? ""
+        } else if adType == .BANNER {
+            bannerAd?.imp_url ?? ""
+        } else {
+            ""
+        }
+        self.trackingParam = if adType == .REWARD {
+            ad?.param ?? ""
+        } else if adType == .BANNER {
+            bannerAd?.param ?? ""
+        } else {
+            ""
+        }
+    }
+    
+    func stopTracking() {
+        enableTracking = false
+        Task { @MainActor in   
+            AdTracking.stopTracking(param: trackingParam ?? "")
         }
     }
 }
