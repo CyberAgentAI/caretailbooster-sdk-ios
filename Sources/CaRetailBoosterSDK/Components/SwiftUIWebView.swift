@@ -68,6 +68,17 @@ extension SwiftUIWebView {
             _ webView: WKWebView,
             didFinish navigation: WKNavigation!
         ) {
+            // ページ読み込み完了後に可視性の監視を開始
+            if viewModel.enableTracking {
+                Task { @MainActor in
+                    AdTracking.trackImpression(
+                        webView: webView,
+                        endpoint: viewModel.trackingEndpoint ?? "",
+                        param: viewModel.trackingParam ?? ""
+                    )
+                    
+                }
+            }
             // Web view finished loading content
             print("web view loaded")
         }

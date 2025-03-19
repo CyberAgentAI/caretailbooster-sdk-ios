@@ -18,9 +18,14 @@ public struct BannerAd: View {
     public var body: some View {
         let vm = BaseWebViewVM()
         SwiftUIWebView(viewModel: vm)
-            .onAppear() {
+            .onAppear(perform: {
+                vm.bannerAd = ad
+                vm.enableImpTracking(adType: .BANNER)
                 vm.loadWebPage(webResource: ad.webview_url)
-            }
+            })
             .frame(width: CGFloat(ad.width), height: CGFloat(ad.height))
+            .onDisappear(perform: {
+                vm.stopTracking()
+            })
     }
 }
