@@ -15,6 +15,7 @@ public struct RetailBoosterAdView: View {
     }
     
     public var body: some View {
+        let _ = adVm.forceRefreshToken
         ScrollView(.horizontal) {
             HStack {
                 if $adVm.adType.wrappedValue == .BANNER {
@@ -25,12 +26,13 @@ public struct RetailBoosterAdView: View {
                     ForEach($adVm.rewardAds, id: \.index) { ad in
                         RewardAd(ad: ad.wrappedValue)
                             .environmentObject(adVm)
+                            .id("reward_\(ad.wrappedValue.index)_\(adVm.forceRefreshToken)")
                     }
                 }
             }
             .onAppear {
                 Task {
-                    await adVm.fetchAds()
+                    await adVm.fetchAdsWithUIUpdate()
                 }
             }
         }

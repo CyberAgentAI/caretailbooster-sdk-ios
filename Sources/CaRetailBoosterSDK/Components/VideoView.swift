@@ -201,7 +201,7 @@ public struct VideoView: View {
         isGranted: false
     )
     .onAppear {
-        vm.currentAd = Reward(index: 1, tag_id: "tag-id1", format_type: AdFormatType.VIDEO.rawValue, video_type: VideoType.STANDARD.rawValue, is_granted: true, webview_url: AdWebViewUrl(contents: "http://localhost:3000/reward.html", getting: "http://localhost:3000/survey.html", interruption: "http://localhost:3000/message/interrupt"), imp_url: "http://localhost:3000/api/imp/imp", view_url: "http://localhost:3000/api/view/view", param: "param1")
+        vm.currentAd = Reward(ad_id: 1, index: 1, tag_id: "tag-id1", format_type: AdFormatType.VIDEO.rawValue, video_type: VideoType.STANDARD.rawValue, is_granted: true, webview_url: AdWebViewUrl(contents: "http://localhost:3000/reward.html", getting: "http://localhost:3000/survey.html", interruption: "http://localhost:3000/message/interrupt"), imp_url: "http://localhost:3000/api/imp/imp", view_url: "http://localhost:3000/api/view/view", param: "param1")
     }
     .environmentObject(vm)
 }
