@@ -1,13 +1,5 @@
 import WebKit
 
-struct VideoAdMessage: Decodable {
-    let index: Int
-}
-
-struct OnClickAdMessage: Decodable {
-    let adID: Int
-}
-
 enum MessageHandler: String, CaseIterable {
     case playVideo
     case playVideoSurvey
@@ -28,12 +20,6 @@ class BaseWebViewVM: ObservableObject {
     
     @Published var showPanel: Bool = false
     @Published var isSurveyPanelShowed: Bool = false
-    
-    var adVm: BaseWebViewVM?
-    
-    // ビデオ広告用メッセージ
-    var videoAdMessage: VideoAdMessage?
-    var onClickAdMessage: OnClickAdMessage?
     
     var rewardAds: RewardAds?
     var rewardVm: AdViewModel?
@@ -132,7 +118,9 @@ class BaseWebViewVM: ObservableObject {
         case .fetchAds:
             // 広告を取得
             Task {
-                await self.rewardVm?.fetchAds()
+                if let rewardVm = self.rewardVm {
+                    await rewardVm.fetchAdsWithUIUpdate()
+                }
             }
         }
     }
