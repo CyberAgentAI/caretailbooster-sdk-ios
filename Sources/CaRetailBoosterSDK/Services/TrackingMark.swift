@@ -217,6 +217,7 @@ enum VideoType: String {
 }
 
 public struct Reward: Decodable {
+    let ad_id: Int
     public let index: Int
     let tag_id: String
     let format_type: String
@@ -229,6 +230,7 @@ public struct Reward: Decodable {
 }
 
 public struct Banner: Decodable {
+    let ad_id: Int
     public let index: Int
     let tag_id: String
     let width: Int

@@ -114,6 +114,7 @@ extension SwiftUIWebView {
 struct SwiftUIWebView_Previews: PreviewProvider {
     static let vm = BaseWebViewVM(webResource: "ad.html",
                                   ad: Reward(
+                                    ad_id: 1,
                                     index: 1,
                                     tag_id: "tag_id_1",
                                     format_type: "VIDEO",

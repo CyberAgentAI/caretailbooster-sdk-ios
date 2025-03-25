@@ -27,6 +27,11 @@ public class AdViewModel: ObservableObject {
     @Published public var callback: Callback?
     @Published public var options: Options?
     
+    // 強制リフレッシュ用プロパティ
+    @Published public var forceRefreshToken = UUID()
+    // 最後に取得したデータのキャッシュ
+    private var lastFetchedRewardAds: [Reward] = []
+    
     let mediaId: String
     let userId: String
     let crypto: String
@@ -48,7 +53,7 @@ public class AdViewModel: ObservableObject {
         }
     }
     
-    public func fetchAds() async -> String {
+    public func fetchAdsWithUIUpdate() async {
         do {
             let body = RewardAdsRequestBody(
                 user: .init(id: userId),
@@ -56,16 +61,42 @@ public class AdViewModel: ObservableObject {
                 tagInfo: .init(tagGroupId: tagGroupId),
                 device: .init(make: DeviceInfo.make, os: DeviceInfo.os, osv: DeviceInfo.osVerion, hwv: DeviceInfo.hwv, h: DeviceInfo.height, w: DeviceInfo.width, language: DeviceInfo.language, ifa: DeviceInfo.ifa)
             )
+           
             let res = try await getAds(runMode: runMode, body: body)
-            bannerAds = res.bannerAds
-            rewardAds = res.rewardAds
-            adType = res.adType
+           
+            // メインスレッドで実行することで、確実にUIを更新する
+            await MainActor.run {
+                // バナー広告は更新の必要がないので、リワード広告のみを対象とする
+                let hasRewardAdsChanged = !areSameRewards(res.rewardAds, lastFetchedRewardAds)
+                
+                rewardAds = res.rewardAds
+                bannerAds = res.bannerAds
+                adType = res.adType
+                lastFetchedRewardAds = res.rewardAds
+                
+                if hasRewardAdsChanged {
+                    forceRefreshToken = UUID()
+                }
+            }
         } catch {
             print("Error fetching ads: \(error)")
             NotificationCenter.default.post(name: NSNotification.Alert, object: nil)
         }
+    }
+       
+    private func areSameRewards(_ newAds: [Reward], _ oldAds: [Reward]) -> Bool {
+        if newAds.isEmpty && oldAds.isEmpty {
+            return true
+        }
         
-        return "OK"
+        if newAds.count != oldAds.count {
+            return false
+        }
+        
+        let oldHash = oldAds.map { "\($0.ad_id)_\($0.param)" }.joined(separator: "|")
+        let newHash = newAds.map { "\($0.ad_id)_\($0.param)" }.joined(separator: "|")
+        
+        return oldHash == newHash
     }
 }
 
