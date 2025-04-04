@@ -38,8 +38,9 @@ struct FullScreenModal<Content: View>: UIViewControllerRepresentable {
             if context.coordinator.modalViewController == nil {
                 let hostingController = UIHostingController(rootView: content())
                 hostingController.modalPresentationStyle = .overFullScreen
+                hostingController.view.backgroundColor = .black
                 hostingController.presentationController?.delegate = context.coordinator
-                uiViewController.present(hostingController, animated: false) {
+                uiViewController.present(hostingController, animated: true) {
                     context.coordinator.modalViewController = hostingController
                 }
             }
