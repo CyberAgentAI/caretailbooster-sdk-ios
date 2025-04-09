@@ -2,12 +2,13 @@ import SwiftUI
 
 struct FullScreenModalModifier<ModalContent: View>: ViewModifier {
     @Binding var isPresented: Bool
+    let backgroundColor: UIColor
     let modalContent: () -> ModalContent
 
     func body(content: Content) -> some View {
         content
             .background(
-                FullScreenModal(isPresented: $isPresented, content: modalContent)
+                FullScreenModal(isPresented: $isPresented, backgroundColor: backgroundColor, content: modalContent)
             )
     }
 }
@@ -15,16 +16,18 @@ struct FullScreenModalModifier<ModalContent: View>: ViewModifier {
 extension View {
     func fullScreenModal<ModalContent: View>(
         isPresented: Binding<Bool>,
+        backgroundColor: UIColor = .black,
         @ViewBuilder content: @escaping () -> ModalContent
     ) -> some View {
         self.modifier(
-            FullScreenModalModifier(isPresented: isPresented, modalContent: content)
+            FullScreenModalModifier(isPresented: isPresented, backgroundColor: backgroundColor, modalContent: content)
         )
     }
 }
 
 struct FullScreenModal<Content: View>: UIViewControllerRepresentable {
     @Binding var isPresented: Bool
+    let backgroundColor: UIColor
     let content: () -> Content
 
     func makeUIViewController(context: Context) -> UIViewController {
@@ -38,7 +41,7 @@ struct FullScreenModal<Content: View>: UIViewControllerRepresentable {
             if context.coordinator.modalViewController == nil {
                 let hostingController = UIHostingController(rootView: content())
                 hostingController.modalPresentationStyle = .overFullScreen
-                hostingController.view.backgroundColor = .black
+                hostingController.view.backgroundColor = backgroundColor
                 hostingController.presentationController?.delegate = context.coordinator
                 uiViewController.present(hostingController, animated: true) {
                     context.coordinator.modalViewController = hostingController
