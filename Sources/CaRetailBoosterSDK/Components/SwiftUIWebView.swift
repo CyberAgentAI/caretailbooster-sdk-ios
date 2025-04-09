@@ -36,11 +36,15 @@ struct SwiftUIWebView: UIViewRepresentable {
         vm.webView.isOpaque = false
         vm.webView.backgroundColor = .clear
         vm.webView.scrollView.backgroundColor = .clear
+        vm.webView.allowsLinkPreview = false
+        
+        let css = "body { -webkit-user-select: none; -webkit-touch-callout: none; }"
+        let script = WKUserScript(source: "var style = document.createElement('style'); style.innerHTML = '\(css)'; document.head.appendChild(style);", injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        userContentController.addUserScript(script)
         
         // window.open()を許可
         vm.webView.uiDelegate = context.coordinator
         vm.webView.navigationDelegate = context.coordinator
-        
         
         return vm.webView
     }

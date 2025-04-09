@@ -114,7 +114,7 @@ public struct RewardAd: View {
             .onDisappear(perform: {
                 vm.stopTracking()
             })
-            .sheet(
+            .fullScreenModal(
                 isPresented: $adVm.isVideoPlaying,
                 content: {
                     if adVm.currentAd?.video_type == VideoType.YOUTUBE.rawValue {
@@ -125,7 +125,7 @@ public struct RewardAd: View {
                             .environmentObject(adVm)
                     }
                 })
-            .sheet(
+            .fullScreenModal(
                 isPresented: $adVm.isVideoSurveyPlaying,
                 content: {
                     let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd)
@@ -137,7 +137,7 @@ public struct RewardAd: View {
                             }
                 }.background(Color.black.opacity(0.5))
             })
-            .sheet(isPresented: $adVm.isSurveyPanelShowed, content: {
+            .fullScreenModal(isPresented: $adVm.isSurveyPanelShowed, content: {
                 let surveyVm = BaseWebViewVM(ad: adVm.currentAd)
                 VStack {
                     SwiftUIWebView(viewModel: surveyVm)
@@ -148,7 +148,7 @@ public struct RewardAd: View {
                 }
                 .background(Color.black.opacity(0.5))
             })
-            .sheet(
+            .fullScreenModal(
                 isPresented: $adVm.isRewardCoverOpened,
                 content: {
                     // TODO: adCallからのステータスによってパラメータを渡す
@@ -162,7 +162,7 @@ public struct RewardAd: View {
                     .background(Color.black.opacity(0.5))
                 }
             )
-            .sheet(isPresented: $adVm.isVideoInterrupted, content: {
+            .fullScreenModal(isPresented: $adVm.isVideoInterrupted, content: {
                 let vm = BaseWebViewVM()
                 VStack {
                     SwiftUIWebView(viewModel: vm)
