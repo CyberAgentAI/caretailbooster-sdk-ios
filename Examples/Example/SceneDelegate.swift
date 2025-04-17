@@ -39,8 +39,8 @@ struct MainView: View {
     @State private var userId: String = ""
     @State private var isUserIdSubmitted: Bool = false
     
-    // client_secretはハードコーディング（実際のプロジェクトでは適切に管理してください）
-    private let clientSecret = "aeon_secret"
+    // test_media を使用
+    private let clientSecret = "2G5tDEJNY7vW5Gw6xqItnAjJz9ghTSwACGf1CygGUsAOeSdyOZ8gHfrbHbsS8fcA"
     
     private func generateCrypto(for userId: String) -> String {
         let combinedString = userId + clientSecret
@@ -77,11 +77,11 @@ struct MainView: View {
                             .font(.headline)
                         
                         RetailBoosterAdView(
-                            mediaId: "wXkhs9RBxYY2L812",
+                            mediaId: "1234567890abcdef",
                             userId: userId,
                             crypto: generateCrypto(for: userId),
-                            tagGroupId: "e6b7e7f1-d890-11ef-b526-06dcbba31fd5",
-                            mode: RunMode.dev,
+                            tagGroupId: "0853bf57-70b4-4ddc-b57c-507c196abfca",
+                            mode: RunMode.stg,
                             callback: Callback(
                                 onMarkSucceeded: {
                                     print("onMarkSucceeded")
@@ -96,11 +96,11 @@ struct MainView: View {
                             .font(.headline)
                         
                         RetailBoosterAdView(
-                            mediaId: "wXkhs9RBxYY2L812",
+                            mediaId: "1234567890abcdef",
                             userId: userId,
                             crypto: generateCrypto(for: userId),
-                            tagGroupId: "a188368b-d89e-11ef-b526-06dcbba31fd5",
-                            mode: RunMode.dev
+                            tagGroupId: "ac0ebf99-f89f-40e5-95ce-09558cf993cc",
+                            mode: RunMode.stg
                         )
                         
                         Button("別のユーザーIDで再設定") {
