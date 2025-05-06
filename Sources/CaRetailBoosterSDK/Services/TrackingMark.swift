@@ -60,6 +60,10 @@ struct AdTracking {
             return timers[key]?.startTime
         }
         
+        func getTimer(for key: String) -> Timer? {
+            return timers[key]?.timer
+        }
+        
         func stopTimer(for key: String) {
             if let timerInfo = timers[key] {
                 timerInfo.timer.invalidate()
@@ -83,14 +87,13 @@ struct AdTracking {
         TimerManager.shared.stopTimer(for: trackingKey)
         
         let startTime = Date()
-        weak var weakTimer: Timer?
         
         let timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
             Task { @MainActor in
                 let isVisible = isWebViewVisible(webView: webView)
                 if !isVisible {
                     // 可視でない場合は時間をリセット
-                    if let timer = weakTimer {
+                    if let timer = TimerManager.shared.getTimer(for: trackingKey) {
                         TimerManager.shared.addTimer(key: trackingKey, timer: timer, startTime: Date())
                     }
                     return
@@ -112,7 +115,6 @@ struct AdTracking {
             }
         }
         
-        weakTimer = timer
         RunLoop.main.add(timer, forMode: .common)
         
         // タイマーを保存
