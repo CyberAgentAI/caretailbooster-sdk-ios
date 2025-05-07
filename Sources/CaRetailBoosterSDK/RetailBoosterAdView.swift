@@ -17,7 +17,7 @@ public struct RetailBoosterAdView: View {
     public var body: some View {
         let _ = adVm.forceRefreshToken
         ScrollView(.horizontal) {
-            HStack {
+            HStack(spacing: adVm.options?.rewardAdItemSpacing ?? 0) {
                 if $adVm.adType.wrappedValue == .BANNER {
                     ForEach($adVm.bannerAds, id: \.index) { ad in
                         BannerAd(ad: ad.wrappedValue)
