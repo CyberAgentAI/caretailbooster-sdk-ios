@@ -113,9 +113,11 @@ public struct Callback {
 // 必要なOptionは随時追加していく
 public struct Options {
     var rewardAd: RewardAdOption?
-    
-    public init(rewardAd: RewardAdOption? = nil) {
+    var rewardAdItemSpacing: CGFloat?
+
+    public init(rewardAd: RewardAdOption? = nil, rewardAdItemSpacing: CGFloat? = nil) {
         self.rewardAd = rewardAd
+        self.rewardAdItemSpacing = rewardAdItemSpacing
     }
 }
 
