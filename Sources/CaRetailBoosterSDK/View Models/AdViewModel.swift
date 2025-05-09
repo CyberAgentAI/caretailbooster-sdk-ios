@@ -114,10 +114,19 @@ public struct Callback {
 public struct Options {
     var rewardAd: RewardAdOption?
     var rewardAdItemSpacing: CGFloat?
+    var rewardAdLeadingMargin: CGFloat?
+    var rewardAdTrailingMargin: CGFloat?
 
-    public init(rewardAd: RewardAdOption? = nil, rewardAdItemSpacing: CGFloat? = nil) {
+    public init(
+        rewardAd: RewardAdOption? = nil,
+        rewardAdItemSpacing: CGFloat? = nil,
+        rewardAdLeadingMargin: CGFloat? = nil,
+        rewardAdTrailingMargin: CGFloat? = nil
+    ) {
         self.rewardAd = rewardAd
         self.rewardAdItemSpacing = rewardAdItemSpacing
+        self.rewardAdLeadingMargin = rewardAdLeadingMargin
+        self.rewardAdTrailingMargin = rewardAdTrailingMargin
     }
 }
 

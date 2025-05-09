@@ -23,7 +23,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     print("onMarkSucceeded")
                 }, onRewardModalClosed: {
                     print("onRewardModalClosed")
-                }), options: Options(rewardAdItemSpacing: 16))
+                }), options: Options(
+                    rewardAdItemSpacing: 16,
+                    rewardAdLeadingMargin: 16,
+                    rewardAdTrailingMargin: 16
+                ))
                 
                 Text("Banner Ads")
                 RetailBoosterAdView(mediaId: "media1", userId: "user1", crypto: "crypto1", tagGroupId: "banner1", mode: RunMode.mock)

@@ -18,6 +18,10 @@ public struct RetailBoosterAdView: View {
         let _ = adVm.forceRefreshToken
         ScrollView(.horizontal) {
             HStack(spacing: adVm.options?.rewardAdItemSpacing ?? 0) {
+                if let leadingMargin = adVm.options?.rewardAdLeadingMargin, leadingMargin > 0 {
+                    Spacer()
+                        .frame(width: leadingMargin)
+                }
                 if $adVm.adType.wrappedValue == .BANNER {
                     ForEach($adVm.bannerAds, id: \.index) { ad in
                         BannerAd(ad: ad.wrappedValue)
@@ -28,6 +32,10 @@ public struct RetailBoosterAdView: View {
                             .environmentObject(adVm)
                             .id("reward_\(ad.wrappedValue.index)_\(adVm.forceRefreshToken)")
                     }
+                }
+                if let trailingMargin = adVm.options?.rewardAdTrailingMargin, trailingMargin > 0 {
+                    Spacer()
+                        .frame(width: trailingMargin)
                 }
             }
             .onAppear {
