@@ -16,7 +16,7 @@ public struct RetailBoosterAdView: View {
     
     public var body: some View {
         let _ = adVm.forceRefreshToken
-        ScrollView(.horizontal) {
+        ScrollView(.horizontal, showsIndicators: !(adVm.options?.hiddenIndicators ?? true)) {
             HStack(spacing: adVm.options?.rewardAdItemSpacing ?? 0) {
                 if let leadingMargin = adVm.options?.rewardAdLeadingMargin, leadingMargin > 0 {
                     Spacer()
