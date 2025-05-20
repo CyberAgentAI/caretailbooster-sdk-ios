@@ -11,7 +11,8 @@ public class RetailBoosterAd {
         crypto: String,
         tagGroupId: String,
         mode: RunMode,
-        callback: Callback? = nil
+        callback: Callback? = nil,
+        options: Options? = nil
     ) {
         self.viewModel = AdViewModel(
             mediaId: mediaId,
@@ -19,7 +20,8 @@ public class RetailBoosterAd {
             crypto: crypto,
             tagGroupId: tagGroupId,
             runMode: mode,
-            callback: callback
+            callback: callback,
+            options: options
         )
     }
 
