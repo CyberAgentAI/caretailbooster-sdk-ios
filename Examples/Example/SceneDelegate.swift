@@ -89,7 +89,13 @@ struct CustomRewardAdListView: View {
             userId: "user1",
             crypto: "crypto1",
             tagGroupId: "reward1",
-            mode: RunMode.mock
+            mode: RunMode.mock,
+            options: Options(
+                rewardAd: RewardAdOption(
+                    width: 173,
+                    height: 210
+                )
+            )
         )
         retailBoosterAd.getAdViews { result in
             switch result {
