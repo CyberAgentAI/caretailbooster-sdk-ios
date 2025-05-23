@@ -127,6 +127,8 @@ class BaseWebViewVM: ObservableObject {
                     await rewardVm.fetchAdsWithUIUpdate()
                 }
             }
+            // notificationを使用して、Flutter側にfetchAdsを通知する
+            NotificationCenter.default.post(name: NSNotification.FetchAds, object: nil)
         }
     }
     
