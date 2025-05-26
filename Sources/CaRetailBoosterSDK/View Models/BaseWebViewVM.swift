@@ -122,11 +122,11 @@ class BaseWebViewVM: ObservableObject {
             rewardVm?.callback?.onRewardModalClosed()
         case .fetchAds:
             // 広告を取得
-            Task {
-                if let rewardVm = self.rewardVm {
-                    await rewardVm.fetchAdsWithUIUpdate()
-                }
-            }
+//            Task {
+//                if let rewardVm = self.rewardVm {
+//                    await rewardVm.fetchAdsWithUIUpdate()
+//                }
+//            }
             // notificationを使用して、Flutter側にfetchAdsを通知する
             NotificationCenter.default.post(name: NSNotification.FetchAds, object: nil)
         }
