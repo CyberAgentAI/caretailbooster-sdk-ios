@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'CaRetailBoosterSDK'
-  s.version          = '1.4.2'
+  s.version          = '1.4.3'
   s.summary          = 'Retail Booster SDK'
   s.homepage         = 'https://github.com/CyberAgentAI/caretailbooster-sdk-ios'
   s.license          = { :type => 'Proprietary', :file => 'LICENSE', :text => 'All rights reserved.' }

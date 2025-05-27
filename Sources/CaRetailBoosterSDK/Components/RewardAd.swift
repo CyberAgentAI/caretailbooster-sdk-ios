@@ -39,13 +39,14 @@ public struct RewardAd: View {
             .fullScreenCover(
                 isPresented: $adVm.isVideoPlaying,
                 content: {
-                    if adVm.currentAd?.video_type == VideoType.YOUTUBE.rawValue {
-                        YouTubeView(isEnded: .constant(false), videoUrl: adVm.videoUrl ?? "")
-                            .environmentObject(adVm)
-                    } else {
-                        VideoView(isEnded: .constant(false), videoUrl: adVm.videoUrl ?? "", isGranted: adVm.currentAd?.is_granted ?? false)
-                            .environmentObject(adVm)
-                    }
+                    let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd)
+                    VStack {
+                        SwiftUIWebView(viewModel: videoSurveyVm)
+                            .onAppear() {
+                                videoSurveyVm.rewardVm = adVm
+                                videoSurveyVm.loadWebPage(webResource: adVm.videoUrl ?? "")
+                            }
+                    }.background(.black.opacity(0.5))
                 })
             .fullScreenCover(
                 isPresented: $adVm.isVideoSurveyPlaying,
@@ -117,13 +118,14 @@ public struct RewardAd: View {
             .fullScreenModal(
                 isPresented: $adVm.isVideoPlaying,
                 content: {
-                    if adVm.currentAd?.video_type == VideoType.YOUTUBE.rawValue {
-                        YouTubeView(isEnded: .constant(false), videoUrl: adVm.videoUrl ?? "")
-                            .environmentObject(adVm)
-                    } else {
-                        VideoView(isEnded: .constant(false), videoUrl: adVm.videoUrl ?? "", isGranted: adVm.currentAd?.is_granted ?? false)
-                            .environmentObject(adVm)
-                    }
+                    let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd)
+                    VStack {
+                        SwiftUIWebView(viewModel: videoSurveyVm)
+                            .onAppear() {
+                                videoSurveyVm.rewardVm = adVm
+                                videoSurveyVm.loadWebPage(webResource: adVm.videoUrl ?? "")
+                            }
+                    }.background(Color.black.opacity(0.5))
                 })
             .fullScreenModal(
                 isPresented: $adVm.isVideoSurveyPlaying,
