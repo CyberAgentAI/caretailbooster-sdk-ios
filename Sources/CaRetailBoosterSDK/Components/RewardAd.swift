@@ -123,7 +123,7 @@ public struct RewardAd: View {
                         SwiftUIWebView(viewModel: videoSurveyVm)
                             .onAppear() {
                                 videoSurveyVm.rewardVm = adVm
-                                videoSurveyVm.loadWebPage(webResource: adVm.videoSurveyUrl ?? "")
+                                videoSurveyVm.loadWebPage(webResource: adVm.videoUrl ?? "")
                             }
                     }.background(Color.black.opacity(0.5))
                 })
