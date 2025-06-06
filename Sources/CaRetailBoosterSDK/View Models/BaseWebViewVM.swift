@@ -143,20 +143,27 @@ class BaseWebViewVM: ObservableObject {
     }
     
     func enableImpTracking(adType: AdType) {
-        enableTracking = true
-        trackingEndpoint = if adType == .REWARD {
-            ad?.imp_url ?? ""
-        } else if adType == .BANNER {
-            bannerAd?.imp_url ?? ""
-        } else {
-            ""
+        // パラメータの取得
+        let param: String? = switch adType {
+        case .REWARD:
+            ad?.param
+        case .BANNER:
+            bannerAd?.param
         }
-        self.trackingParam = if adType == .REWARD {
-            ad?.param ?? ""
-        } else if adType == .BANNER {
-            bannerAd?.param ?? ""
-        } else {
-            ""
+        
+        // パラメータが取得でき、かつ未送信の場合のみ有効化
+        if let param = param,
+           let rewardVm = rewardVm,
+           let adId = adType == .REWARD ? ad?.ad_id : bannerAd?.ad_id,
+           !rewardVm.hasImpressionBeenSent(for: adId) {
+            enableTracking = true
+            trackingEndpoint = switch adType {
+            case .REWARD:
+                ad?.imp_url ?? ""
+            case .BANNER:
+                bannerAd?.imp_url ?? ""
+            }
+            self.trackingParam = param
         }
     }
     

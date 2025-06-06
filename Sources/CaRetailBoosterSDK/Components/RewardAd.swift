@@ -23,7 +23,10 @@ public struct RewardAd: View {
                 .onAppear(perform: {
                     vm.ad = ad
                     vm.rewardVm = adVm
-                    vm.enableImpTracking(adType: .REWARD)
+                    if !adVm.hasImpressionBeenSent(for: ad.ad_id) {
+                        vm.enableImpTracking(adType: .REWARD)
+                        adVm.markImpressionSent(for: ad.ad_id)
+                    }
                     vm.loadWebPage(webResource: ad.webview_url.contents)
                 })
                 .frame(width: adVm.options?.rewardAd?.width ?? 173, height: adVm.options?.rewardAd?.height ?? 210)
@@ -102,7 +105,10 @@ public struct RewardAd: View {
                 .onAppear(perform: {
                     vm.ad = ad
                     vm.rewardVm = adVm
-                    vm.enableImpTracking(adType: .REWARD)
+                    if !adVm.hasImpressionBeenSent(for: ad.ad_id) {
+                        vm.enableImpTracking(adType: .REWARD)
+                        adVm.markImpressionSent(for: ad.ad_id)
+                    }
                     vm.loadWebPage(webResource: ad.webview_url.contents)
                 })
                 .frame(width: adVm.options?.rewardAd?.width ?? 173, height: adVm.options?.rewardAd?.height ?? 210)
