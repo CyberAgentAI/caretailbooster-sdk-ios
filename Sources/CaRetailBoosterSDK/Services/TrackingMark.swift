@@ -248,7 +248,7 @@ public struct RewardAds: Decodable {
 }
 
 public struct GetRewardResponse {
-    let adType: AdType
+    let adType: AdType?
     let rewardAds: [Reward]
     let bannerAds: [Banner]
 }
@@ -342,9 +342,14 @@ public func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws ->
     
     let (data, response) = try await URLSession.shared.data(for: request)
     
-    // if not 200, throw error
-    guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+    // if not 200 or 204, throw error
+    guard let httpResponse = response as? HTTPURLResponse, (httpResponse.statusCode == 200 || httpResponse.statusCode == 204) else {
         throw URLError(.badServerResponse)
+    }
+    
+    // 204 No Contentの場合、空のレスポンスを返す
+    if httpResponse.statusCode == 204 {
+        return GetRewardResponse(adType: nil, rewardAds: [], bannerAds: [])
     }
     
     // レスポンスのad_type=REWARD or BANNERになる
