@@ -44,5 +44,6 @@ public struct RetailBoosterAdView: View {
                 }
             }
         }
+        .environment(\.colorScheme, .light)
     }
 }
