@@ -42,14 +42,16 @@ public class RetailBoosterAd {
         
         if viewModel.adType == .BANNER {
             views = viewModel.bannerAds.map { AnyView(BannerAd(ad: $0)) }
-        } else {
-            views = viewModel.rewardAds.map { 
+        } else if viewModel.adType == .REWARD {
+            views = viewModel.rewardAds.map {
                 AnyView(
                     RewardAd(ad: $0)
                         .environmentObject(viewModel)
                         .id("reward_\($0.index)_\(viewModel.forceRefreshToken)")
                 )
             }
+        } else {
+            views = []
         }
         
         return views

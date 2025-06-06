@@ -11,7 +11,7 @@ import SwiftUI
 public class AdViewModel: ObservableObject {
     @Published public var rewardAds: [Reward] = []
     @Published public var bannerAds: [Banner] = []
-    @Published public var adType: AdType = .BANNER
+    @Published public var adType: AdType? = .BANNER
     
     @Published var isVideoPlaying: Bool = false
     @Published var isSurveyPanelShowed: Bool = false
