@@ -24,6 +24,12 @@ public class RetailBoosterAd {
             options: options
         )
     }
+    deinit {
+        let viewModel = self.viewModel
+        Task { @MainActor in
+            viewModel.resetImpressionSentAdIds()
+        }
+    }
 
     public func getAdViews(completion: @escaping (Result<[AnyView], Error>) -> Void) {
         Task {

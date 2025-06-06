@@ -31,6 +31,8 @@ public class AdViewModel: ObservableObject {
     @Published public var forceRefreshToken = UUID()
     // 最後に取得したデータのキャッシュ
     private var lastFetchedRewardAds: [Reward] = []
+    // impリクエストの送信状態を管理
+    private var sentImpAdIds: Set<Int> = []
     
     let mediaId: String
     let userId: String
@@ -69,6 +71,9 @@ public class AdViewModel: ObservableObject {
                 // バナー広告は更新の必要がないので、リワード広告のみを対象とする
                 let hasRewardAdsChanged = !areSameRewards(res.rewardAds, lastFetchedRewardAds)
                 
+                let newAdIds = Set(res.rewardAds.map { $0.ad_id })
+                sentImpAdIds = sentImpAdIds.intersection(newAdIds)
+
                 rewardAds = res.rewardAds
                 bannerAds = res.bannerAds
                 adType = res.adType
@@ -97,6 +102,18 @@ public class AdViewModel: ObservableObject {
         let newHash = newAds.map { "\($0.ad_id)_\($0.param)" }.joined(separator: "|")
         
         return oldHash == newHash
+    }
+
+    public func hasImpressionBeenSent(for adId: Int) -> Bool {
+        sentImpAdIds.contains(adId)
+    }
+
+    public func markImpressionSent(for adId: Int) {
+        sentImpAdIds.insert(adId)
+    }
+
+    public func resetImpressionSentAdIds() {
+        sentImpAdIds.removeAll()
     }
 }
 
