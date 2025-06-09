@@ -14,6 +14,12 @@ public class RetailBoosterAd {
         callback: Callback? = nil,
         options: Options? = nil
     ) {
+        // ダークモードを無効化
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first {
+            window.overrideUserInterfaceStyle = .light
+        }
+        
         self.viewModel = AdViewModel(
             mediaId: mediaId,
             userId: userId,
