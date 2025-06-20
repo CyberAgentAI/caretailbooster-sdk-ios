@@ -15,24 +15,6 @@ struct AdTracking {
     private static let visibilityThreshold: CGFloat = 0.5
     private static let visibilityDuration: TimeInterval = 1.0
     
-    static func view(endpoint: String, param: String, videoProgressEvent: VideoProgressEvent?) async throws {
-        var components = URLComponents(string: endpoint)!
-        components.queryItems = [URLQueryItem(name: "param", value: param)]
-        if let videoProgressEvent = videoProgressEvent {
-            components.queryItems?.append(URLQueryItem(name: "event", value: videoProgressEvent.description))
-        }
-        guard let url = components.url else {
-            throw URLError(.badURL)
-        }
-        
-        let (_, response) = try await URLSession.shared.data(from: url)
-        
-        // if not 200, throw error
-        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
-            throw URLError(.badServerResponse)
-        }
-    }
-    
     static func impression(endpoint: String, param: String) async throws {
         var components = URLComponents(string: endpoint)!
         components.queryItems = [URLQueryItem(name: "param", value: param)]
@@ -177,45 +159,10 @@ struct AdTracking {
     }
 }
 
-enum VideoProgressEvent {
-    case start
-    case half
-    case quarter
-    case threeQuarter
-    case end
-    
-    var description: String {
-        switch self {
-        case .start:
-            return "start"
-        case .quarter:
-            return "quarter"
-        case .half:
-            return "half"
-        case .threeQuarter:
-            return "three-quarter"
-        case .end:
-            return "end"
-        }
-    }
-}
-
 struct AdWebViewUrl: Decodable {
     let contents: String
     let getting: String
     let interruption: String
-}
-
-enum AdFormatType: String {
-    case VIDEO
-    case INTERSTITIAL
-    case LOGIN_BONUS
-    case SURVEY
-}
-
-enum VideoType: String {
-    case STANDARD
-    case YOUTUBE
 }
 
 public struct Reward: Decodable {
