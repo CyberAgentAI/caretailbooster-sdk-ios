@@ -33,12 +33,20 @@ public struct Banner: Decodable {
 }
 
 public struct RewardAds: Decodable {
-    let ad_type: String
+    let adType: String
+    let tagGroup: TagGroup
     let ads: [Reward]
+
+    enum CodingKeys: String, CodingKey {
+        case adType = "ad_type"
+        case tagGroup = "tag_group"
+        case ads
+    }
 }
 
 public struct GetRewardResponse {
     let adType: AdType?
+    let tagGroup: TagGroup?
     let rewardAds: [Reward]
     let bannerAds: [Banner]
 }
@@ -48,9 +56,28 @@ public enum AdType: String {
     case REWARD
 }
 
+public struct TagGroup: Decodable {
+    public let length: Int
+    public let areaName: String
+    public let areaDescription: String
+    
+    enum CodingKeys: String, CodingKey {
+        case length
+        case areaName = "area_name"
+        case areaDescription = "area_description"
+    }
+}
+
 struct BannerAds: Decodable {
-    let ad_type: String
+    let adType: String
+    let tagGroup: TagGroup
     let ads: [Banner]
+
+    enum CodingKeys: String, CodingKey {
+        case adType = "ad_type"
+        case tagGroup = "tag_group"
+        case ads
+    }
 }
 
 struct AdCallResponse: Decodable {
@@ -139,18 +166,18 @@ public func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws ->
 
     // 204 No Contentの場合、空のレスポンスを返す
     if httpResponse.statusCode == 204 {
-        return GetRewardResponse(adType: nil, rewardAds: [], bannerAds: [])
+        return GetRewardResponse(adType: nil, tagGroup: nil, rewardAds: [], bannerAds: [])
     }
 
     // レスポンスのad_type=REWARD or BANNERになる
     let res = try JSONDecoder().decode(AdCallResponse.self, from: data)
     if res.ad_type == AdType.BANNER.rawValue {
         let bannerAds = try JSONDecoder().decode(BannerAds.self, from: data)
-        return GetRewardResponse(adType: AdType.BANNER, rewardAds: [], bannerAds: bannerAds.ads)
+        return GetRewardResponse(adType: .BANNER, tagGroup: bannerAds.tagGroup, rewardAds: [], bannerAds: bannerAds.ads)
     } else if res.ad_type == AdType.REWARD.rawValue {
         let rewardAds = try JSONDecoder().decode(RewardAds.self, from: data)
-        return GetRewardResponse(adType: AdType.REWARD, rewardAds: rewardAds.ads, bannerAds: [])
+        return GetRewardResponse(adType: .REWARD, tagGroup: rewardAds.tagGroup, rewardAds: rewardAds.ads, bannerAds: [])
     }
 
-    return GetRewardResponse(adType: AdType.BANNER, rewardAds: [], bannerAds: [])
+    return GetRewardResponse(adType: nil, tagGroup: nil, rewardAds: [], bannerAds: [])
 }
