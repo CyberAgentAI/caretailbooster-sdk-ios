@@ -1,9 +1,15 @@
 import SwiftUI
+import Combine
 
 @MainActor
 @available(iOS 13.0, *)
-public class RetailBoosterAd {
+public class RetailBoosterAd: ObservableObject {
     private var viewModel: AdViewModel
+
+    @Published public private(set) var title: String?
+    @Published public private(set) var description: String?
+    
+    private var cancellables = Set<AnyCancellable>()
     
     public init(
         mediaId: String,
@@ -14,6 +20,9 @@ public class RetailBoosterAd {
         callback: Callback? = nil,
         options: Options? = nil
     ) {
+        self.title = nil
+        self.description = nil
+        
         // ダークモードを無効化
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let window = windowScene.windows.first {
@@ -29,12 +38,29 @@ public class RetailBoosterAd {
             callback: callback,
             options: options
         )
+        
+        setupDataBinding()
     }
+
     deinit {
         let viewModel = self.viewModel
         Task { @MainActor in
             viewModel.resetImpressionSentAdIds()
         }
+    }
+    
+    private func setupDataBinding() {
+        viewModel.$title
+            .sink { [weak self] newTitle in
+                self?.title = newTitle
+            }
+            .store(in: &cancellables)
+            
+        viewModel.$description
+            .sink { [weak self] newDescription in
+                self?.description = newDescription
+            }
+            .store(in: &cancellables)
     }
 
     public func getAdViews(completion: @escaping (Result<[AnyView], Error>) -> Void) {

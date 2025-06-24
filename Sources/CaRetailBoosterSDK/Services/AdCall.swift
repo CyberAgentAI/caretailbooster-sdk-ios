@@ -57,9 +57,9 @@ public enum AdType: String {
 }
 
 public struct TagGroup: Decodable {
-    public let length: Int
-    public let areaName: String
-    public let areaDescription: String
+    public let length: Int?
+    public let areaName: String?
+    public let areaDescription: String?
     
     enum CodingKeys: String, CodingKey {
         case length
