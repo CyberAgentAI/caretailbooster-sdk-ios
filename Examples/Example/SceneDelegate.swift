@@ -8,6 +8,7 @@
 import UIKit
 import SwiftUI
 import CaRetailBoosterSDK
+import Combine
 
 @available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -47,16 +48,42 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 @available(iOS 13.0, *)
 struct CustomRewardAdListView: View {
+    @ObservedObject private var retailBoosterAd: RetailBoosterAd
     @State private var adsLoaded = false
     @State private var adViews: [AnyView] = []
 
     private let columns: Int = 2
     private let spacing: CGFloat = 16
+    
+    init() {
+        self.retailBoosterAd = RetailBoosterAd(
+            mediaId: "media1",
+            userId: "user1",
+            crypto: "crypto1",
+            tagGroupId: "reward1",
+            mode: RunMode.local,
+            options: Options(
+                rewardAd: RewardAdOption(
+                    width: 173,
+                    height: 210
+                )
+            )
+        )
+    }
 
     var body: some View {
         VStack {
             if adsLoaded, !adViews.isEmpty {
-                Text("Custom Reward Ads List")
+                if let areaName = retailBoosterAd.areaName, !areaName.isEmpty {
+                    Text(areaName)
+                        .font(.headline)
+                }
+                if let areaDescription = retailBoosterAd.areaDescription, !areaDescription.isEmpty {
+                    Text(areaDescription)
+                        .font(.subheadline)
+                        .opacity(0.5)
+                }
+
                 ScrollView {
                     VStack(spacing: spacing) {
                         ForEach(0..<(adViews.count + columns - 1) / columns, id: \.self) { row in
@@ -84,24 +111,11 @@ struct CustomRewardAdListView: View {
     }
 
     private func loadAds() {
-        let retailBoosterAd = RetailBoosterAd(
-            mediaId: "media1",
-            userId: "user1",
-            crypto: "crypto1",
-            tagGroupId: "reward1",
-            mode: RunMode.mock,
-            options: Options(
-                rewardAd: RewardAdOption(
-                    width: 173,
-                    height: 210
-                )
-            )
-        )
         retailBoosterAd.getAdViews { result in
             switch result {
             case .success(let views):
                 self.adViews = views
-                self.adsLoaded = views.isEmpty == false
+                self.adsLoaded = !views.isEmpty
             case .failure(let error):
                 print("Error: \(error.localizedDescription)")
             }
