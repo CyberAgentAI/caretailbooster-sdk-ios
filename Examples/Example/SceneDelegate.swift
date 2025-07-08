@@ -74,12 +74,12 @@ struct CustomRewardAdListView: View {
     var body: some View {
         VStack {
             if adsLoaded, !adViews.isEmpty {
-                if let title = retailBoosterAd.title, !title.isEmpty {
-                    Text(title)
+                if let areaName = retailBoosterAd.areaName, !areaName.isEmpty {
+                    Text(areaName)
                         .font(.headline)
                 }
-                if let description = retailBoosterAd.description, !description.isEmpty {
-                    Text(description)
+                if let areaDescription = retailBoosterAd.areaDescription, !areaDescription.isEmpty {
+                    Text(areaDescription)
                         .font(.subheadline)
                         .opacity(0.5)
                 }

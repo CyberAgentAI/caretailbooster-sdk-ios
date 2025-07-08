@@ -34,7 +34,7 @@ public struct Banner: Decodable {
 
 public struct RewardAds: Decodable {
     let adType: String
-    let tagGroup: TagGroup
+    let tagGroup: TagGroup?
     let ads: [Reward]
 
     enum CodingKeys: String, CodingKey {
@@ -70,7 +70,7 @@ public struct TagGroup: Decodable {
 
 struct BannerAds: Decodable {
     let adType: String
-    let tagGroup: TagGroup
+    let tagGroup: TagGroup?
     let ads: [Banner]
 
     enum CodingKeys: String, CodingKey {

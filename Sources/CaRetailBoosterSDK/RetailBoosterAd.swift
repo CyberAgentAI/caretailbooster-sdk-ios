@@ -6,8 +6,8 @@ import Combine
 public class RetailBoosterAd: ObservableObject {
     private var viewModel: AdViewModel
 
-    @Published public private(set) var title: String?
-    @Published public private(set) var description: String?
+    @Published public private(set) var areaName: String?
+    @Published public private(set) var areaDescription: String?
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -20,8 +20,8 @@ public class RetailBoosterAd: ObservableObject {
         callback: Callback? = nil,
         options: Options? = nil
     ) {
-        self.title = nil
-        self.description = nil
+        self.areaName = nil
+        self.areaDescription = nil
         
         // ダークモードを無効化
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -50,15 +50,15 @@ public class RetailBoosterAd: ObservableObject {
     }
     
     private func setupDataBinding() {
-        viewModel.$title
-            .sink { [weak self] newTitle in
-                self?.title = newTitle
+        viewModel.$areaName
+            .sink { [weak self] newAreaName in
+                self?.areaName = newAreaName
             }
             .store(in: &cancellables)
             
-        viewModel.$description
-            .sink { [weak self] newDescription in
-                self?.description = newDescription
+        viewModel.$areaDescription
+            .sink { [weak self] newAreaDescription in
+                self?.areaDescription = newAreaDescription
             }
             .store(in: &cancellables)
     }

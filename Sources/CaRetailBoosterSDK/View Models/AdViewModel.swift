@@ -12,8 +12,8 @@ public class AdViewModel: ObservableObject {
     @Published public var rewardAds: [Reward] = []
     @Published public var bannerAds: [Banner] = []
     @Published public var adType: AdType? = .BANNER
-    @Published public var title: String?
-    @Published public var description: String?
+    @Published public var areaName: String?
+    @Published public var areaDescription: String?
 
     @Published var isVideoPlaying: Bool = false
     @Published var isSurveyPanelShowed: Bool = false
@@ -80,8 +80,8 @@ public class AdViewModel: ObservableObject {
                 bannerAds = res.bannerAds
                 adType = res.adType
                 lastFetchedRewardAds = res.rewardAds
-                title = res.tagGroup?.areaName
-                description = res.tagGroup?.areaDescription
+                areaName = res.tagGroup?.areaName
+                areaDescription = res.tagGroup?.areaDescription
                 
                 if hasRewardAdsChanged {
                     forceRefreshToken = UUID()
