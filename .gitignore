@@ -3,3 +3,14 @@
 xcuserdata/
 .DS_Store
 
+# Build directories
+build/
+Examples/build/
+DerivedData/
+
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+
