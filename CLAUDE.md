@@ -55,9 +55,7 @@ make list-booted  # 起動中のシミュレータ一覧
 
 - **BannerAd**: 固定サイズのバナー広告
 - **RewardAd**: リワード付きインタラクティブ広告（動画/アンケート）- フルスクリーンモーダル制御
-- **SwiftUIWebView**: Web コンテンツ用の WebKit ラッパー（JavaScript-Swift間通信）
-- **VideoRewardView**: 動画リワード表示専用ビュー
-- **TransparentBackgroundView**: 透明背景ビュー
+- **SwiftUIWebView**: Web コンテンツ用の WebKit ラッパー（JavaScript-Swift 間通信）
 
 ### データフロー
 

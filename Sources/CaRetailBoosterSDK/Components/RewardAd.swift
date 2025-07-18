@@ -73,32 +73,6 @@ public struct RewardAd: View {
                         }
                 }.background(.black.opacity(0.5))
             })
-            .fullScreenCover(
-                isPresented: $adVm.isRewardCoverOpened,
-                content: {
-                    // TODO: adCallからのステータスによってパラメータを渡す
-                    VStack {
-                        // todo check ad call status
-                        VideoRewardView(isAdCallStatus: true,
-                                        landingPageUrl: adVm.currentAd?.webview_url.getting ?? ""
-                        )
-                        .environmentObject(adVm)
-                    }
-                    .background(.black.opacity(0.5))
-                }
-            )
-            .fullScreenCover(isPresented: $adVm.isVideoInterrupted, content: {
-                let vm = BaseWebViewVM()
-                VStack {
-                    SwiftUIWebView(viewModel: vm)
-                        .onAppear() {
-                            vm.rewardVm = adVm
-                            vm.loadWebPage(webResource: adVm.currentAd?.webview_url.interruption ?? "")
-                        }
-                        .frame(alignment: .center)
-                }
-                .background(TransparentBackgroundView())
-            })
         } else {
             // Fallback on earlier versions
             SwiftUIWebView(viewModel: vm)
@@ -155,32 +129,6 @@ public struct RewardAd: View {
                         }
                 }
                 .background(Color.black.opacity(0.5))
-            })
-            .fullScreenModal(
-                isPresented: $adVm.isRewardCoverOpened,
-                content: {
-                    // TODO: adCallからのステータスによってパラメータを渡す
-                    VStack {
-                        // todo check ad call status
-                        VideoRewardView(isAdCallStatus: true,
-                                        landingPageUrl: adVm.currentAd?.webview_url.getting ?? ""
-                        )
-                        .environmentObject(adVm)
-                    }
-                    .background(Color.black.opacity(0.5))
-                }
-            )
-            .fullScreenModal(isPresented: $adVm.isVideoInterrupted, content: {
-                let vm = BaseWebViewVM()
-                VStack {
-                    SwiftUIWebView(viewModel: vm)
-                        .onAppear() {
-                            vm.rewardVm = adVm
-                            vm.loadWebPage(webResource: ad.webview_url.interruption)
-                        }
-                        .frame(alignment: .center)
-                }
-                .background(TransparentBackgroundView())
             })
 
         }

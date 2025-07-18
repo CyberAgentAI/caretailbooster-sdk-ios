@@ -18,8 +18,6 @@ public class AdViewModel: ObservableObject {
     @Published var isVideoPlaying: Bool = false
     @Published var isSurveyPanelShowed: Bool = false
     @Published var isVideoSurveyPlaying: Bool = false
-    @Published var isRewardCoverOpened: Bool = false
-    @Published var isVideoInterrupted: Bool = false
     
     @Published var currentAd: Reward?
     @Published var videoUrl: String?
