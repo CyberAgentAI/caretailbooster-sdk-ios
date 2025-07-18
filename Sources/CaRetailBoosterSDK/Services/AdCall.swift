@@ -146,8 +146,8 @@ func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws -> GetRew
     default:
         url = LOCAL_AD_SERVER_URL
     }
-    let components = URLComponents(string: url)!
-    guard let url = components.url else {
+    guard let components = URLComponents(string: url),
+          let url = components.url else {
         throw URLError(.badURL)
     }
 

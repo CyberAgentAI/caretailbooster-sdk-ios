@@ -157,8 +157,8 @@ public struct RewardAdOption {
     var height: CGFloat?
     
     public init(width: Int?, height: Int?) {
-        self.width = width != nil ? CGFloat(width!) : nil
-        self.height = height != nil ? CGFloat(height!) : nil
+        self.width = width.map { CGFloat($0) }
+        self.height = height.map { CGFloat($0) }
     }
 }
 
