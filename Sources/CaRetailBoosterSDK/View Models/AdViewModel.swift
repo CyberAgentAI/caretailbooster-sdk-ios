@@ -8,7 +8,7 @@ import SwiftUI
 
 @MainActor
 @available(iOS 13.0, *)
-public class AdViewModel: ObservableObject {
+class AdViewModel: ObservableObject {
     @Published public var rewardAds: [Reward] = []
     @Published public var bannerAds: [Banner] = []
     @Published public var adType: AdType? = .BANNER
@@ -18,8 +18,6 @@ public class AdViewModel: ObservableObject {
     @Published var isVideoPlaying: Bool = false
     @Published var isSurveyPanelShowed: Bool = false
     @Published var isVideoSurveyPlaying: Bool = false
-    @Published var isRewardCoverOpened: Bool = false
-    @Published var isVideoInterrupted: Bool = false
     
     @Published var currentAd: Reward?
     @Published var videoUrl: String?
@@ -63,7 +61,7 @@ public class AdViewModel: ObservableObject {
                 user: .init(id: userId),
                 publisher: .init(id: mediaId, crypto: crypto),
                 tagInfo: .init(tagGroupId: tagGroupId),
-                device: .init(make: DeviceInfo.make, os: DeviceInfo.os, osv: DeviceInfo.osVerion, hwv: DeviceInfo.hwv, h: DeviceInfo.height, w: DeviceInfo.width, language: DeviceInfo.language, ifa: DeviceInfo.ifa)
+                device: .init(make: DeviceInfo.make, os: DeviceInfo.os, osv: DeviceInfo.osVersion, hwv: DeviceInfo.hwv, h: DeviceInfo.height, w: DeviceInfo.width, language: DeviceInfo.language, ifa: DeviceInfo.ifa)
             )
            
             let res = try await getAds(runMode: runMode, body: body)
@@ -119,55 +117,4 @@ public class AdViewModel: ObservableObject {
     public func resetImpressionSentAdIds() {
         sentImpAdIds.removeAll()
     }
-}
-
-public struct Callback {
-    var onMarkSucceeded: () -> Void?
-    var onRewardModalClosed: () -> Void?
-    
-    public init(onMarkSucceeded: @escaping () -> Void?, onRewardModalClosed: @escaping () -> Void?) {
-        self.onMarkSucceeded = onMarkSucceeded
-        self.onRewardModalClosed = onRewardModalClosed
-    }
-}
-
-// 必要なOptionは随時追加していく
-public struct Options {
-    var rewardAd: RewardAdOption?
-    var rewardAdItemSpacing: CGFloat?
-    var rewardAdLeadingMargin: CGFloat?
-    var rewardAdTrailingMargin: CGFloat?
-    var hiddenIndicators: Bool?
-
-    public init(
-        rewardAd: RewardAdOption? = nil,
-        rewardAdItemSpacing: CGFloat? = nil,
-        rewardAdLeadingMargin: CGFloat? = nil,
-        rewardAdTrailingMargin: CGFloat? = nil,
-        hiddenIndicators: Bool? = true
-    ) {
-        self.rewardAd = rewardAd
-        self.rewardAdItemSpacing = rewardAdItemSpacing
-        self.rewardAdLeadingMargin = rewardAdLeadingMargin
-        self.rewardAdTrailingMargin = rewardAdTrailingMargin
-        self.hiddenIndicators = hiddenIndicators
-    }
-}
-
-public struct RewardAdOption {
-    var width: CGFloat?
-    var height: CGFloat?
-    
-    public init(width: Int?, height: Int?) {
-        self.width = width != nil ? CGFloat(width!) : nil
-        self.height = height != nil ? CGFloat(height!) : nil
-    }
-}
-
-public enum RunMode: String {
-    case local
-    case dev
-    case stg
-    case prd
-    case mock
 }

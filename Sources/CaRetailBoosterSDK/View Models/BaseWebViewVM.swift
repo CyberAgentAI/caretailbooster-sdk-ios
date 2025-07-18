@@ -108,12 +108,10 @@ class BaseWebViewVM: ObservableObject {
             if ad != nil {
                 rewardVm?.currentAd = nil
                 rewardVm?.isSurveyPanelShowed = false // リワード獲得済みなのでサーベイモーダルを閉じる
-                rewardVm?.isRewardCoverOpened = false
             }
             
             rewardVm?.isVideoPlaying = false
             rewardVm?.isVideoSurveyPlaying = false
-            rewardVm?.isVideoInterrupted = false
         case .onMarkSuccess:
             // マーク完了をSDKユーザーに通知
             rewardVm?.callback?.onMarkSucceeded()

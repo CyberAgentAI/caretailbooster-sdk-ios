@@ -19,7 +19,7 @@ struct DeviceInfo {
         UIDevice.current.systemName
     }
 
-    static var osVerion: String {
+    static var osVersion: String {
         UIDevice.current.systemVersion
     }
 
