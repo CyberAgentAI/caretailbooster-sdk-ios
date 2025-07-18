@@ -61,7 +61,7 @@ class AdViewModel: ObservableObject {
                 user: .init(id: userId),
                 publisher: .init(id: mediaId, crypto: crypto),
                 tagInfo: .init(tagGroupId: tagGroupId),
-                device: .init(make: DeviceInfo.make, os: DeviceInfo.os, osv: DeviceInfo.osVerion, hwv: DeviceInfo.hwv, h: DeviceInfo.height, w: DeviceInfo.width, language: DeviceInfo.language, ifa: DeviceInfo.ifa)
+                device: .init(make: DeviceInfo.make, os: DeviceInfo.os, osv: DeviceInfo.osVersion, hwv: DeviceInfo.hwv, h: DeviceInfo.height, w: DeviceInfo.width, language: DeviceInfo.language, ifa: DeviceInfo.ifa)
             )
            
             let res = try await getAds(runMode: runMode, body: body)
