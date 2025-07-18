@@ -8,9 +8,9 @@ struct AdWebViewUrl: Decodable {
     let interruption: String
 }
 
-public struct Reward: Decodable {
+struct Reward: Decodable {
     let ad_id: Int
-    public let index: Int
+    let index: Int
     let tag_id: String
     let format_type: String
     let video_type: String?
@@ -21,9 +21,9 @@ public struct Reward: Decodable {
     let param: String
 }
 
-public struct Banner: Decodable {
+struct Banner: Decodable {
     let ad_id: Int
-    public let index: Int
+    let index: Int
     let tag_id: String
     let width: Int
     let height: Int
@@ -32,7 +32,7 @@ public struct Banner: Decodable {
     let webview_url: String
 }
 
-public struct RewardAds: Decodable {
+struct RewardAds: Decodable {
     let adType: String
     let tagGroup: TagGroup?
     let ads: [Reward]
@@ -44,22 +44,22 @@ public struct RewardAds: Decodable {
     }
 }
 
-public struct GetRewardResponse {
+struct GetRewardResponse {
     let adType: AdType?
     let tagGroup: TagGroup?
     let rewardAds: [Reward]
     let bannerAds: [Banner]
 }
 
-public enum AdType: String {
+enum AdType: String {
     case BANNER
     case REWARD
 }
 
-public struct TagGroup: Decodable {
-    public let length: Int?
-    public let areaName: String?
-    public let areaDescription: String?
+struct TagGroup: Decodable {
+    let length: Int?
+    let areaName: String?
+    let areaDescription: String?
     
     enum CodingKeys: String, CodingKey {
         case length
@@ -84,8 +84,8 @@ struct AdCallResponse: Decodable {
     let ad_type: String
 }
 
-public struct AdsRequest: Codable {
-    public struct User: Codable {
+struct AdsRequest: Codable {
+    struct User: Codable {
         let id: String
     }
 
@@ -128,11 +128,11 @@ public struct AdsRequest: Codable {
     }
 }
 
-public typealias RewardAdsRequestBody = AdsRequest
+typealias RewardAdsRequestBody = AdsRequest
 
 @MainActor
 @available(iOS 13.0, *)
-public func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws -> GetRewardResponse {
+func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws -> GetRewardResponse {
     let url: String
     switch runMode {
     case RunMode.dev:

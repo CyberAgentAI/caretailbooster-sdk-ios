@@ -7,7 +7,7 @@
 import SwiftUI
 
 @available(iOS 13.0, *)
-public struct RewardAd: View {
+struct RewardAd: View {
     @EnvironmentObject var adVm: AdViewModel
     @State var showErrorAlert: Bool = false
     let ad: Reward

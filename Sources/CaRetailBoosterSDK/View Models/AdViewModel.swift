@@ -8,7 +8,7 @@ import SwiftUI
 
 @MainActor
 @available(iOS 13.0, *)
-public class AdViewModel: ObservableObject {
+class AdViewModel: ObservableObject {
     @Published public var rewardAds: [Reward] = []
     @Published public var bannerAds: [Banner] = []
     @Published public var adType: AdType? = .BANNER

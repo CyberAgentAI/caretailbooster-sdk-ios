@@ -8,7 +8,7 @@
 import SwiftUI
 
 @available(iOS 13.0, *)
-public struct BannerAd: View {
+struct BannerAd: View {
     let ad: Banner
     
     public init (ad: Banner) {
