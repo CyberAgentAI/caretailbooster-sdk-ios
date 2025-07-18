@@ -134,29 +134,3 @@ struct RewardAd: View {
         }
     }
 }
-
-@available(iOS 17.0, *)
-#Preview {
-    @Previewable @State var ads: [Reward] = []
-    let viewModel = AdViewModel(mediaId: "media1", userId: "user1", crypto: "crypto1", tagGroupId: "reward1", runMode: RunMode.stg)
-    
-    List {
-        ForEach($ads, id: \.index) { ad in
-            RewardAd(ad: ad.wrappedValue)
-                .environmentObject(viewModel)
-        }
-    }.onAppear {
-        let body = RewardAdsRequestBody(
-            user: .init(id: "user1"),
-            publisher: .init(id: "publisherId", crypto: "crypto"),
-            tagInfo: .init(tagGroupId: "reward1"),
-            device: .init(make: DeviceInfo.make, os: DeviceInfo.os, osv: DeviceInfo.osVerion, hwv: DeviceInfo.hwv, h: DeviceInfo.height, w: DeviceInfo.width, language: DeviceInfo.language, ifa: DeviceInfo.ifa)
-        )
-        Task {
-            let res = try await getAds(runMode: RunMode.stg, body: body)
-            let ordered = res.rewardAds.sorted{$0.index < $1.index}
-            print("ordered: \(ordered)")
-            ads = ordered
-        }
-    }
-}
