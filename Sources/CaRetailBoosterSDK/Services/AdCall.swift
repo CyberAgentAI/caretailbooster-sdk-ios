@@ -136,15 +136,15 @@ func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws -> GetRew
     let url: String
     switch runMode {
     case RunMode.dev:
-        url = DEV_AD_SERVER_URL
+        url = Const.DEV_AD_SERVER_URL
     case RunMode.stg:
-        url = STG_AD_SERVER_URL
+        url = Const.STG_AD_SERVER_URL
     case RunMode.prd:
-        url = PRD_AD_SERVER_URL
+        url = Const.PRD_AD_SERVER_URL
     case RunMode.mock:
-        url = MOCK_AD_SERVER_URL
+        url = Const.MOCK_AD_SERVER_URL
     default:
-        url = LOCAL_AD_SERVER_URL
+        url = Const.LOCAL_AD_SERVER_URL
     }
     guard let components = URLComponents(string: url),
           let url = components.url else {
