@@ -122,27 +122,3 @@ extension SwiftUIWebView {
         }
     }
 }
-
-@available(iOS 13.0, *)
-struct SwiftUIWebView_Previews: PreviewProvider {
-    static let vm = BaseWebViewVM(webResource: "ad.html",
-                                  ad: Reward(
-                                    ad_id: 1,
-                                    index: 1,
-                                    tag_id: "tag_id_1",
-                                    format_type: "VIDEO",
-                                    video_type: "STANDARD",
-                                    is_granted: false,
-                                    webview_url: AdWebViewUrl(contents: "http://localhost:3000/reward.html", getting: "http://localhost:3000/survey.html", interruption: "http://localhost:3000/message/interrupt"),
-                                    imp_url: "http://localhost:3000/imp/imp",
-                                    view_url: "http://localhost:3000/view/view",
-                                    param: "param"
-                                  )
-    )
-    
-    static var previews: some View {
-        SwiftUIWebView(viewModel: vm)
-            .onAppear(perform: { vm.loadWebPage(webResource: "http://localhost:3000/reward/1")
-            })
-    }
-}

@@ -7,7 +7,7 @@
 import SwiftUI
 
 @available(iOS 13.0, *)
-public struct RewardAd: View {
+struct RewardAd: View {
     @EnvironmentObject var adVm: AdViewModel
     @State var showErrorAlert: Bool = false
     let ad: Reward
@@ -73,32 +73,6 @@ public struct RewardAd: View {
                         }
                 }.background(.black.opacity(0.5))
             })
-            .fullScreenCover(
-                isPresented: $adVm.isRewardCoverOpened,
-                content: {
-                    // TODO: adCallからのステータスによってパラメータを渡す
-                    VStack {
-                        // todo check ad call status
-                        VideoRewardView(isAdCallStatus: true,
-                                        landingPageUrl: adVm.currentAd?.webview_url.getting ?? ""
-                        )
-                        .environmentObject(adVm)
-                    }
-                    .background(.black.opacity(0.5))
-                }
-            )
-            .fullScreenCover(isPresented: $adVm.isVideoInterrupted, content: {
-                let vm = BaseWebViewVM()
-                VStack {
-                    SwiftUIWebView(viewModel: vm)
-                        .onAppear() {
-                            vm.rewardVm = adVm
-                            vm.loadWebPage(webResource: adVm.currentAd?.webview_url.interruption ?? "")
-                        }
-                        .frame(alignment: .center)
-                }
-                .background(TransparentBackgroundView())
-            })
         } else {
             // Fallback on earlier versions
             SwiftUIWebView(viewModel: vm)
@@ -156,59 +130,7 @@ public struct RewardAd: View {
                 }
                 .background(Color.black.opacity(0.5))
             })
-            .fullScreenModal(
-                isPresented: $adVm.isRewardCoverOpened,
-                content: {
-                    // TODO: adCallからのステータスによってパラメータを渡す
-                    VStack {
-                        // todo check ad call status
-                        VideoRewardView(isAdCallStatus: true,
-                                        landingPageUrl: adVm.currentAd?.webview_url.getting ?? ""
-                        )
-                        .environmentObject(adVm)
-                    }
-                    .background(Color.black.opacity(0.5))
-                }
-            )
-            .fullScreenModal(isPresented: $adVm.isVideoInterrupted, content: {
-                let vm = BaseWebViewVM()
-                VStack {
-                    SwiftUIWebView(viewModel: vm)
-                        .onAppear() {
-                            vm.rewardVm = adVm
-                            vm.loadWebPage(webResource: ad.webview_url.interruption)
-                        }
-                        .frame(alignment: .center)
-                }
-                .background(TransparentBackgroundView())
-            })
 
-        }
-    }
-}
-
-@available(iOS 17.0, *)
-#Preview {
-    @Previewable @State var ads: [Reward] = []
-    let viewModel = AdViewModel(mediaId: "media1", userId: "user1", crypto: "crypto1", tagGroupId: "reward1", runMode: RunMode.stg)
-    
-    List {
-        ForEach($ads, id: \.index) { ad in
-            RewardAd(ad: ad.wrappedValue)
-                .environmentObject(viewModel)
-        }
-    }.onAppear {
-        let body = RewardAdsRequestBody(
-            user: .init(id: "user1"),
-            publisher: .init(id: "publisherId", crypto: "crypto"),
-            tagInfo: .init(tagGroupId: "reward1"),
-            device: .init(make: DeviceInfo.make, os: DeviceInfo.os, osv: DeviceInfo.osVerion, hwv: DeviceInfo.hwv, h: DeviceInfo.height, w: DeviceInfo.width, language: DeviceInfo.language, ifa: DeviceInfo.ifa)
-        )
-        Task {
-            let res = try await getAds(runMode: RunMode.stg, body: body)
-            let ordered = res.rewardAds.sorted{$0.index < $1.index}
-            print("ordered: \(ordered)")
-            ads = ordered
         }
     }
 }

@@ -55,9 +55,7 @@ make list-booted  # 起動中のシミュレータ一覧
 
 - **BannerAd**: 固定サイズのバナー広告
 - **RewardAd**: リワード付きインタラクティブ広告（動画/アンケート）- フルスクリーンモーダル制御
-- **SwiftUIWebView**: Web コンテンツ用の WebKit ラッパー（JavaScript-Swift間通信）
-- **VideoRewardView**: 動画リワード表示専用ビュー
-- **TransparentBackgroundView**: 透明背景ビュー
+- **SwiftUIWebView**: Web コンテンツ用の WebKit ラッパー（JavaScript-Swift 間通信）
 
 ### データフロー
 
@@ -164,11 +162,16 @@ TagGroup モデルを通じて、カスタマイズ可能なタイトルと説�
 
 ```
 Sources/CaRetailBoosterSDK/
-├── Models/          # データモデル（Banner、Reward、TagGroup）
-├── Services/        # ビジネスロジック（AdCall、AdTracking）
-├── ViewModels/      # MVVMビューモデル
-├── Views/           # SwiftUIコンポーネント
-└── RetailBoosterAd* # パブリックAPIエントリーポイント
+├── Components/      # UI コンポーネント（BannerAd、RewardAd、SwiftUIWebView）
+├── Const/           # 定数定義（サーバーURL等）
+├── Models/          # データモデルと設定型（Callback、Options、RunMode）
+├── Services/        # ビジネスロジック（AdCall、AdTracking、Notification）
+├── Utils/           # ユーティリティ（DeviceInfo）
+├── View Models/     # MVVM ビューモデル（AdViewModel、BaseWebViewVM）
+├── ViewModifier/    # SwiftUI ViewModifier（FullScreenModalModifier）
+├── RetailBoosterAd.swift    # プログラマティック API エントリーポイント
+├── RetailBoosterAdView.swift # SwiftUI API エントリーポイント
+└── PrivacyInfo.xcprivacy    # プライバシーマニフェスト
 
 Examples/            # SDK使用をデモンストレーションするサンプルiOSアプリ
 ```
