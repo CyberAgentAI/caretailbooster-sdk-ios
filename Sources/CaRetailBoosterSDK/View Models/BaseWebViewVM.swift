@@ -13,32 +13,17 @@ enum MessageHandler: String, CaseIterable {
 @MainActor
 @available(iOS 13.0, *)
 class BaseWebViewVM: ObservableObject {
-    @Published var webResource: String?
     var webView: WKWebView
-    
-    // MARK: - Properties for Javascript alert, confirm, and prompt dialog boxes
-    
-    @Published var showPanel: Bool = false
-    @Published var isSurveyPanelShowed: Bool = false
-    
-    var rewardAds: RewardAds?
     var rewardVm: AdViewModel?
-    
-    var onVideoStart: (() -> Void)?
-    
     var ad: Reward?
     var bannerAd: Banner?
-    
-    var youtubeVideoId: String?
     
     // Tracking用のパラメータ
     var enableTracking: Bool = false
     var trackingEndpoint: String?
     var trackingParam: String?
     
-    init(webResource: String? = nil, rewardVm: AdViewModel? = nil, onVideoStart: (() -> Void)? = nil, ad: Reward? = nil, youtubeVideoId: String? = nil) {
-        self.webResource = webResource
-        
+    init(rewardVm: AdViewModel? = nil, ad: Reward? = nil) {
         let config = WKWebViewConfiguration()
         config.allowsInlineMediaPlayback = true
         // this will not require any gesture for triggering playback
@@ -55,29 +40,17 @@ class BaseWebViewVM: ObservableObject {
             // Fallback on earlier versions
         }
         
-        if let rewardVm = rewardVm {
-            self.rewardVm = rewardVm
-        }
-        
-        self.onVideoStart = onVideoStart
-        
+        self.rewardVm = rewardVm
         self.ad = ad
-        
-        if let youtubeVideoId = youtubeVideoId {
-            self.youtubeVideoId = youtubeVideoId
-        }
     }
     
     func loadWebPage(webResource: String) {
-        //        if let webResource = webResource {
         guard let url = URL(string: webResource) else {
             print("Bad URL")
             return
         }
-        
         let request = URLRequest(url: url)
         webView.load(request)
-        //        }
     }
     
     // MARK: - Functions for messaging
@@ -97,8 +70,6 @@ class BaseWebViewVM: ObservableObject {
                 rewardVm?.isVideoSurveyPlaying = true
             }
         case .showModal:
-            self.isSurveyPanelShowed = true
-            
             if ad != nil {
                 rewardVm?.currentAd = ad
                 rewardVm?.surveyUrl = message
@@ -127,16 +98,6 @@ class BaseWebViewVM: ObservableObject {
             }
             // notificationを使用して、Flutter側にfetchAdsを通知する
             NotificationCenter.default.post(name: NSNotification.FetchAds, object: nil)
-        }
-    }
-    
-    func messageTo(message: String) {
-        let escapedMessage = message.replacingOccurrences(of: "\"", with: "\\\"")
-        let js = "window.postMessage(\"\(escapedMessage)\", \"*\")"
-        self.webView.evaluateJavaScript(js) { (result, error) in
-            if let error = error {
-                print("Error: \(error.localizedDescription)")
-            }
         }
     }
     
