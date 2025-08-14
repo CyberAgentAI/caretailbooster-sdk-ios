@@ -13,35 +13,45 @@ enum MessageHandler: String, CaseIterable {
 @MainActor
 @available(iOS 13.0, *)
 class BaseWebViewVM: ObservableObject {
-    var webView: WKWebView
-    var rewardVm: AdViewModel?
-    var ad: Reward?
-    var bannerAd: Banner?
-    
-    // Tracking用のパラメータ
-    var enableTracking: Bool = false
-    var trackingEndpoint: String?
-    var trackingParam: String?
-    
-    init(rewardVm: AdViewModel? = nil, ad: Reward? = nil) {
+    lazy var webView: WKWebView = {
         let config = WKWebViewConfiguration()
         config.allowsInlineMediaPlayback = true
         // this will not require any gesture for triggering playback
         config.mediaTypesRequiringUserActionForPlayback = []
-        
-        self.webView = WKWebView(frame: .zero,
-                                 configuration: config)
-        
+
+        let webView = WKWebView(
+            frame: .zero,
+            configuration: config)
+
         if #available(iOS 16.4, *) {
 #if DEBUG
-            self.webView.isInspectable = true
+            webView.isInspectable = true
 #endif
         } else {
             // Fallback on earlier versions
         }
-        
-        self.rewardVm = rewardVm
+
+        return webView
+    }()
+
+    var rewardVm: AdViewModel?
+    var ad: Reward?
+    var bannerAd: Banner?
+
+    // Tracking用のパラメータ
+    var enableTracking: Bool = false
+    var trackingEndpoint: String?
+    var trackingParam: String?
+
+    // init for banner
+    init(bannerAd: Banner) {
+        self.bannerAd = bannerAd
+    }
+
+    // init for reward
+    init(ad: Reward? = nil, rewardVm: AdViewModel) {
         self.ad = ad
+        self.rewardVm = rewardVm
     }
     
     func loadWebPage(webResource: String) {

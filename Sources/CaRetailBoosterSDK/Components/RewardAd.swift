@@ -17,12 +17,10 @@ struct RewardAd: View {
     }
     
     public var body: some View {
-        let vm = BaseWebViewVM()
+        let vm = BaseWebViewVM(ad: ad, rewardVm: adVm)
         if #available(iOS 15.0, *) {
             SwiftUIWebView(viewModel: vm)
                 .onAppear(perform: {
-                    vm.ad = ad
-                    vm.rewardVm = adVm
                     if !adVm.hasImpressionBeenSent(for: ad.ad_id) {
                         vm.enableImpTracking(adType: .REWARD)
                         adVm.markImpressionSent(for: ad.ad_id)
@@ -42,11 +40,10 @@ struct RewardAd: View {
             .fullScreenCover(
                 isPresented: $adVm.isVideoPlaying,
                 content: {
-                    let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd)
+                    let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd, rewardVm: adVm)
                     VStack {
                         SwiftUIWebView(viewModel: videoSurveyVm)
                             .onAppear() {
-                                videoSurveyVm.rewardVm = adVm
                                 videoSurveyVm.loadWebPage(webResource: adVm.videoUrl ?? "")
                             }
                     }.background(.black.opacity(0.5))
@@ -54,21 +51,19 @@ struct RewardAd: View {
             .fullScreenCover(
                 isPresented: $adVm.isVideoSurveyPlaying,
                 content: {
-                    let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd)
+                    let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd, rewardVm: adVm)
                     VStack {
                         SwiftUIWebView(viewModel: videoSurveyVm)
                             .onAppear() {
-                                videoSurveyVm.rewardVm = adVm
                                 videoSurveyVm.loadWebPage(webResource: adVm.videoSurveyUrl ?? "")
                             }
                     }.background(.black.opacity(0.5))
                 })
             .fullScreenCover(isPresented: $adVm.isSurveyPanelShowed, content: {
-                let surveyVm = BaseWebViewVM(ad: adVm.currentAd)
+                let surveyVm = BaseWebViewVM(ad: adVm.currentAd, rewardVm: adVm)
                 VStack {
                     SwiftUIWebView(viewModel: surveyVm)
                         .onAppear() {
-                            surveyVm.rewardVm = adVm
                             surveyVm.loadWebPage(webResource: adVm.surveyUrl ?? "")
                         }
                 }.background(.black.opacity(0.5))
@@ -77,8 +72,6 @@ struct RewardAd: View {
             // Fallback on earlier versions
             SwiftUIWebView(viewModel: vm)
                 .onAppear(perform: {
-                    vm.ad = ad
-                    vm.rewardVm = adVm
                     if !adVm.hasImpressionBeenSent(for: ad.ad_id) {
                         vm.enableImpTracking(adType: .REWARD)
                         adVm.markImpressionSent(for: ad.ad_id)
@@ -98,11 +91,10 @@ struct RewardAd: View {
             .fullScreenModal(
                 isPresented: $adVm.isVideoPlaying,
                 content: {
-                    let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd)
+                    let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd, rewardVm: adVm)
                     VStack {
                         SwiftUIWebView(viewModel: videoSurveyVm)
                             .onAppear() {
-                                videoSurveyVm.rewardVm = adVm
                                 videoSurveyVm.loadWebPage(webResource: adVm.videoUrl ?? "")
                             }
                     }.background(Color.black.opacity(0.5))
@@ -110,21 +102,19 @@ struct RewardAd: View {
             .fullScreenModal(
                 isPresented: $adVm.isVideoSurveyPlaying,
                 content: {
-                    let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd)
+                    let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd, rewardVm: adVm)
                     VStack {
                         SwiftUIWebView(viewModel: videoSurveyVm)
                             .onAppear() {
-                                videoSurveyVm.rewardVm = adVm
                                 videoSurveyVm.loadWebPage(webResource: adVm.videoSurveyUrl ?? "")
                             }
                 }.background(Color.black.opacity(0.5))
             })
             .fullScreenModal(isPresented: $adVm.isSurveyPanelShowed, content: {
-                let surveyVm = BaseWebViewVM(ad: adVm.currentAd)
+                let surveyVm = BaseWebViewVM(ad: adVm.currentAd, rewardVm: adVm)
                 VStack {
                     SwiftUIWebView(viewModel: surveyVm)
                         .onAppear() {
-                            surveyVm.rewardVm = adVm
                             surveyVm.loadWebPage(webResource: adVm.surveyUrl ?? "")
                         }
                 }
