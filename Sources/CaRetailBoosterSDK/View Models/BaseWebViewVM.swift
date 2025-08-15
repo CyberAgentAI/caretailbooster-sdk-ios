@@ -68,31 +68,19 @@ class BaseWebViewVM: ObservableObject {
     func messageFrom(fromHandler: MessageHandler, message: String) {
         switch fromHandler {
         case .playVideo:
-            if ad != nil {
-                rewardVm?.currentAd = ad
-                rewardVm?.videoUrl = message
-                rewardVm?.isVideoPlaying = true
+            if let ad {
+                rewardVm?.showModal(type: .video(url: message), ad: ad)
             }
         case .playVideoSurvey:
-            if ad != nil {
-                rewardVm?.currentAd = ad
-                rewardVm?.videoSurveyUrl = message
-                rewardVm?.isVideoSurveyPlaying = true
+            if let ad {
+                rewardVm?.showModal(type: .videoSurvey(url: message), ad: ad)
             }
         case .showModal:
-            if ad != nil {
-                rewardVm?.currentAd = ad
-                rewardVm?.surveyUrl = message
-                rewardVm?.isSurveyPanelShowed = true
+            if let ad {
+                rewardVm?.showModal(type: .survey(url: message), ad: ad)
             }
         case .closeModal:
-            if ad != nil {
-                rewardVm?.currentAd = nil
-                rewardVm?.isSurveyPanelShowed = false // リワード獲得済みなのでサーベイモーダルを閉じる
-            }
-            
-            rewardVm?.isVideoPlaying = false
-            rewardVm?.isVideoSurveyPlaying = false
+            rewardVm?.closeModal()
         case .onMarkSuccess:
             // マーク完了をSDKユーザーに通知
             rewardVm?.callback?.onMarkSucceeded()

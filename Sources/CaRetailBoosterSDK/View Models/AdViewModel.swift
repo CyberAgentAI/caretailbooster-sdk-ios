@@ -15,15 +15,8 @@ class AdViewModel: ObservableObject {
     @Published public var areaName: String?
     @Published public var areaDescription: String?
 
-    @Published var isVideoPlaying: Bool = false
-    @Published var isSurveyPanelShowed: Bool = false
-    @Published var isVideoSurveyPlaying: Bool = false
-    
+    @Published var activeModal: ModalType = .none
     @Published var currentAd: Reward?
-    @Published var videoUrl: String?
-    @Published var surveyUrl: String?
-    @Published var videoSurveyUrl: String?
-    
     @Published public var callback: Callback?
     @Published public var options: Options?
     
@@ -116,5 +109,15 @@ class AdViewModel: ObservableObject {
 
     public func resetImpressionSentAdIds() {
         sentImpAdIds.removeAll()
+    }
+
+    func showModal(type: ModalType, ad: Reward) {
+        currentAd = ad
+        activeModal = type
+    }
+
+    func closeModal() {
+        activeModal = .none
+        currentAd = nil
     }
 }
