@@ -16,10 +16,9 @@ struct BannerAd: View {
     }
     
     public var body: some View {
-        let vm = BaseWebViewVM()
+        let vm = BaseWebViewVM(bannerAd: ad)
         SwiftUIWebView(viewModel: vm)
             .onAppear(perform: {
-                vm.bannerAd = ad
                 vm.enableImpTracking(adType: .BANNER)
                 vm.loadWebPage(webResource: ad.webview_url)
             })

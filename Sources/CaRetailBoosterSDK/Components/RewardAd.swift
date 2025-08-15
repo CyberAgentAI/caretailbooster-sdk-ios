@@ -17,120 +17,78 @@ struct RewardAd: View {
     }
     
     public var body: some View {
-        let vm = BaseWebViewVM()
-        if #available(iOS 15.0, *) {
-            SwiftUIWebView(viewModel: vm)
-                .onAppear(perform: {
-                    vm.ad = ad
-                    vm.rewardVm = adVm
-                    if !adVm.hasImpressionBeenSent(for: ad.ad_id) {
-                        vm.enableImpTracking(adType: .REWARD)
-                        adVm.markImpressionSent(for: ad.ad_id)
-                    }
-                    vm.loadWebPage(webResource: ad.webview_url.contents)
-                })
-                .frame(width: adVm.options?.rewardAd?.width ?? 173, height: adVm.options?.rewardAd?.height ?? 210)
-                .onReceive(NotificationCenter.default.publisher(for: NSNotification.Alert))
-            { data in
-                print("Alert notification received")
-                // TODO: エラー通知
-                showErrorAlert = true
-            }
-            .onDisappear(perform: {
-                vm.stopTracking()
-            })
-            .fullScreenCover(
-                isPresented: $adVm.isVideoPlaying,
-                content: {
-                    let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd)
-                    VStack {
-                        SwiftUIWebView(viewModel: videoSurveyVm)
-                            .onAppear() {
-                                videoSurveyVm.rewardVm = adVm
-                                videoSurveyVm.loadWebPage(webResource: adVm.videoUrl ?? "")
-                            }
-                    }.background(.black.opacity(0.5))
-                })
-            .fullScreenCover(
-                isPresented: $adVm.isVideoSurveyPlaying,
-                content: {
-                    let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd)
-                    VStack {
-                        SwiftUIWebView(viewModel: videoSurveyVm)
-                            .onAppear() {
-                                videoSurveyVm.rewardVm = adVm
-                                videoSurveyVm.loadWebPage(webResource: adVm.videoSurveyUrl ?? "")
-                            }
-                    }.background(.black.opacity(0.5))
-                })
-            .fullScreenCover(isPresented: $adVm.isSurveyPanelShowed, content: {
-                let surveyVm = BaseWebViewVM(ad: adVm.currentAd)
-                VStack {
-                    SwiftUIWebView(viewModel: surveyVm)
-                        .onAppear() {
-                            surveyVm.rewardVm = adVm
-                            surveyVm.loadWebPage(webResource: adVm.surveyUrl ?? "")
-                        }
-                }.background(.black.opacity(0.5))
-            })
-        } else {
-            // Fallback on earlier versions
-            SwiftUIWebView(viewModel: vm)
-                .onAppear(perform: {
-                    vm.ad = ad
-                    vm.rewardVm = adVm
-                    if !adVm.hasImpressionBeenSent(for: ad.ad_id) {
-                        vm.enableImpTracking(adType: .REWARD)
-                        adVm.markImpressionSent(for: ad.ad_id)
-                    }
-                    vm.loadWebPage(webResource: ad.webview_url.contents)
-                })
-                .frame(width: adVm.options?.rewardAd?.width ?? 173, height: adVm.options?.rewardAd?.height ?? 210)
-                .onReceive(NotificationCenter.default.publisher(for: NSNotification.Alert))
-            { data in
-                print("Alert notification received")
-                // TODO: エラー通知
-                showErrorAlert = true
-            }
-            .onDisappear(perform: {
-                vm.stopTracking()
-            })
-            .fullScreenModal(
-                isPresented: $adVm.isVideoPlaying,
-                content: {
-                    let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd)
-                    VStack {
-                        SwiftUIWebView(viewModel: videoSurveyVm)
-                            .onAppear() {
-                                videoSurveyVm.rewardVm = adVm
-                                videoSurveyVm.loadWebPage(webResource: adVm.videoUrl ?? "")
-                            }
-                    }.background(Color.black.opacity(0.5))
-                })
-            .fullScreenModal(
-                isPresented: $adVm.isVideoSurveyPlaying,
-                content: {
-                    let videoSurveyVm = BaseWebViewVM(ad: adVm.currentAd)
-                    VStack {
-                        SwiftUIWebView(viewModel: videoSurveyVm)
-                            .onAppear() {
-                                videoSurveyVm.rewardVm = adVm
-                                videoSurveyVm.loadWebPage(webResource: adVm.videoSurveyUrl ?? "")
-                            }
-                }.background(Color.black.opacity(0.5))
-            })
-            .fullScreenModal(isPresented: $adVm.isSurveyPanelShowed, content: {
-                let surveyVm = BaseWebViewVM(ad: adVm.currentAd)
-                VStack {
-                    SwiftUIWebView(viewModel: surveyVm)
-                        .onAppear() {
-                            surveyVm.rewardVm = adVm
-                            surveyVm.loadWebPage(webResource: adVm.surveyUrl ?? "")
-                        }
+        let vm = BaseWebViewVM(ad: ad, rewardVm: adVm)
+        SwiftUIWebView(viewModel: vm)
+            .onAppear(perform: {
+                if !adVm.hasImpressionBeenSent(for: ad.ad_id) {
+                    vm.enableImpTracking(adType: .REWARD)
+                    adVm.markImpressionSent(for: ad.ad_id)
                 }
-                .background(Color.black.opacity(0.5))
+                vm.loadWebPage(webResource: ad.webview_url.contents)
             })
+            .frame(width: adVm.options?.rewardAd?.width ?? 173, height: adVm.options?.rewardAd?.height ?? 210)
+            .onReceive(NotificationCenter.default.publisher(for: NSNotification.Alert)) { data in
+                print("Alert notification received")
+                // TODO: エラー通知
+                showErrorAlert = true
+            }
+            .onDisappear(perform: {
+                vm.stopTracking()
+            })
+            .modifier(RewardModalModifier(adVm: adVm))
+    }
+}
 
+@available(iOS 13.0, *)
+private struct RewardModalModifier: ViewModifier {
+    @ObservedObject var adVm: AdViewModel
+    
+    private var isModalPresented: Binding<Bool> {
+        Binding(
+            get: { adVm.activeModal.isPresented },
+            set: { newValue in
+                if !newValue {
+                    adVm.closeModal()
+                }
+            }
+        )
+    }
+
+    func body(content: Content) -> some View {
+        if #available(iOS 15.0, *) {
+            content
+                .fullScreenCover(
+                    isPresented: isModalPresented,
+                    content: {
+                        if let url = adVm.activeModal.url {
+                            let modalVm = BaseWebViewVM(ad: adVm.currentAd, rewardVm: adVm)
+                            VStack {
+                                SwiftUIWebView(viewModel: modalVm)
+                                    .onAppear {
+                                        modalVm.loadWebPage(webResource: url)
+                                    }
+                            }
+                            .background(.black.opacity(0.5))
+                        }
+                    }
+                )
+        } else {
+            content
+                .fullScreenModal(
+                    isPresented: isModalPresented,
+                    content: {
+                        if let url = adVm.activeModal.url {
+                            let modalVm = BaseWebViewVM(ad: adVm.currentAd, rewardVm: adVm)
+                            VStack {
+                                SwiftUIWebView(viewModel: modalVm)
+                                    .onAppear {
+                                        modalVm.loadWebPage(webResource: url)
+                                    }
+                            }
+                            .background(Color.black.opacity(0.5))
+                        }
+                    }
+                )
         }
     }
 }

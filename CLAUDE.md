@@ -56,14 +56,16 @@ make list-booted  # 起動中のシミュレータ一覧
 - **BannerAd**: 固定サイズのバナー広告
 - **RewardAd**: リワード付きインタラクティブ広告（動画/アンケート）- フルスクリーンモーダル制御
 - **SwiftUIWebView**: Web コンテンツ用の WebKit ラッパー（JavaScript-Swift 間通信）
+- **RewardModalModifier**: iOS 15以上/以下に対応したモーダル表示の統一実装
 
 ### データフロー
 
 1. AdViewModel が AdCall サービスから広告をリクエスト
 2. AdCall が設定された環境エンドポイントから取得
 3. 広告がキャッシュされ、UI コンポーネント経由で表示
-4. AdTracking がインプレッションとインタラクションを記録
-5. コールバックがイベント（リワード、クリック）をホストアプリに通知
+4. JavaScriptメッセージに応じてModalType（video/videoSurvey/survey）でモーダル表示
+5. AdTracking がインプレッションとインタラクションを記録
+6. コールバックがイベント（リワード、クリック）をホストアプリに通知
 
 ## 環境設定
 
@@ -164,7 +166,7 @@ TagGroup モデルを通じて、カスタマイズ可能なタイトルと説�
 Sources/CaRetailBoosterSDK/
 ├── Components/      # UI コンポーネント（BannerAd、RewardAd、SwiftUIWebView）
 ├── Const/           # 定数定義（サーバーURL等）
-├── Models/          # データモデルと設定型（Callback、Options、RunMode）
+├── Models/          # データモデルと設定型（ModalType、Callback、Options、RunMode）
 ├── Services/        # ビジネスロジック（AdCall、AdTracking、Notification）
 ├── Utils/           # ユーティリティ（DeviceInfo）
 ├── View Models/     # MVVM ビューモデル（AdViewModel、BaseWebViewVM）
