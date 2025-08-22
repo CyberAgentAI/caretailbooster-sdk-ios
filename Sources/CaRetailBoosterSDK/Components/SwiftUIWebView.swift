@@ -26,6 +26,7 @@ struct SwiftUIWebView: UIViewRepresentable {
         userContentController.add(context.coordinator, name: MessageHandler.onMarkSuccess.rawValue)
         userContentController.add(context.coordinator, name: MessageHandler.onRewardFinish.rawValue)
         userContentController.add(context.coordinator, name: MessageHandler.fetchAds.rawValue)
+        userContentController.add(context.coordinator, name: MessageHandler.openUrl.rawValue)
         
         // Handle alert
         vm.webView.uiDelegate = context.coordinator
