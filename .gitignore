@@ -2,6 +2,7 @@
 .idea/
 xcuserdata/
 .DS_Store
+.index-build/
 
 # Build directories
 build/
