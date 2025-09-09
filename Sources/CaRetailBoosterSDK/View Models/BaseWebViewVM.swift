@@ -8,6 +8,7 @@ enum MessageHandler: String, CaseIterable {
     case onMarkSuccess
     case onRewardFinish
     case fetchAds
+    case openUrl
 }
 
 @MainActor
@@ -96,6 +97,17 @@ class BaseWebViewVM: ObservableObject {
             }
             // notificationを使用して、Flutter側にfetchAdsを通知する
             NotificationCenter.default.post(name: NSNotification.FetchAds, object: nil)
+        case .openUrl:
+            // URLを開く
+            guard let url = URL(string: message) else {
+                print("Invalid URL: \(message)")
+                return
+            }
+            UIApplication.shared.open(url, options: [:]) { success in
+                if !success {
+                    print("Failed to open URL: \(message)")
+                }
+            }
         }
     }
     
