@@ -30,6 +30,7 @@ struct Banner: Decodable {
     let imp_url: String
     let param: String
     let webview_url: String
+    let landing_page_url: String?
 }
 
 struct RewardAds: Decodable {
