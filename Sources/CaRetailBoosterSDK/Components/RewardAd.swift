@@ -26,7 +26,7 @@ struct RewardAd: View {
                 }
                 vm.loadWebPage(webResource: ad.webview_url.contents)
             })
-            .frame(width: adVm.options?.rewardAd?.width ?? 173, height: adVm.options?.rewardAd?.height ?? 210)
+            .frame(width: adVm.options?.size?.width ?? 173, height: adVm.options?.size?.height ?? 210)
             .onReceive(NotificationCenter.default.publisher(for: NSNotification.Alert)) { data in
                 print("Alert notification received")
                 // TODO: エラー通知

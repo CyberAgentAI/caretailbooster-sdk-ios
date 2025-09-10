@@ -9,6 +9,7 @@ import SwiftUI
 
 @available(iOS 13.0, *)
 struct BannerAd: View {
+    @EnvironmentObject var adVm: AdViewModel
     let ad: Banner
     
     public init (ad: Banner) {
@@ -22,7 +23,10 @@ struct BannerAd: View {
                 vm.enableImpTracking(adType: .BANNER)
                 vm.loadWebPage(webResource: ad.webview_url)
             })
-            .frame(width: CGFloat(ad.width), height: CGFloat(ad.height))
+            .frame(
+                width: adVm.options?.size?.width ?? CGFloat(ad.width),
+                height: adVm.options?.size?.height ?? CGFloat(ad.height)
+            )
             .onDisappear(perform: {
                 vm.stopTracking()
             })

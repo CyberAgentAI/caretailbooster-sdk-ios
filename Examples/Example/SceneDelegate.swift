@@ -20,18 +20,30 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
             let contentView = ScrollView(.vertical, showsIndicators: false) {
                 Text("Reward Ads")
-                RetailBoosterAdView(mediaId: "media1", userId: "user1", crypto: "crypto1", tagGroupId: "reward1", mode: RunMode.mock, callback: Callback(onMarkSucceeded: {
-                    print("onMarkSucceeded")
-                }, onRewardModalClosed: {
-                    print("onRewardModalClosed")
-                }), options: Options(
-                    rewardAdItemSpacing: 16,
-                    rewardAdLeadingMargin: 16,
-                    rewardAdTrailingMargin: 16
-                ))
+                RetailBoosterAdView(
+                    mediaId: "media1", userId: "user1", crypto: "crypto1", tagGroupId: "reward1",
+                    mode: RunMode.local,
+                    callback: Callback(
+                        onMarkSucceeded: {
+                            print("onMarkSucceeded")
+                        },
+                        onRewardModalClosed: {
+                            print("onRewardModalClosed")
+                        }),
+                    options: Options(
+                        itemSpacing: 16,
+                        leadingMargin: 16,
+                        trailingMargin: 16
+                    ))
 
                 Text("Banner Ads")
-                RetailBoosterAdView(mediaId: "media1", userId: "user1", crypto: "crypto1", tagGroupId: "banner1", mode: RunMode.mock)
+                RetailBoosterAdView(
+                    mediaId: "media1", userId: "user1", crypto: "crypto1", tagGroupId: "banner1",
+                    mode: RunMode.local,
+                    options: Options(
+                        size: .init(width: 360, height: 120)
+                    )
+                )
 
                 CustomRewardAdListView()
             }
@@ -63,7 +75,7 @@ struct CustomRewardAdListView: View {
             tagGroupId: "reward1",
             mode: RunMode.local,
             options: Options(
-                rewardAd: RewardAdOption(
+                size: SizeOption(
                     width: 173,
                     height: 210
                 )
