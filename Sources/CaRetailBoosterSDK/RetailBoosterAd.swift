@@ -79,7 +79,12 @@ public class RetailBoosterAd: ObservableObject {
         let views: [AnyView]
         
         if viewModel.adType == .BANNER {
-            views = viewModel.bannerAds.map { AnyView(BannerAd(ad: $0)) }
+            views = viewModel.bannerAds.map { 
+                AnyView(
+                    BannerAd(ad: $0)
+                        .environmentObject(viewModel)
+                )
+            }
         } else if viewModel.adType == .REWARD {
             views = viewModel.rewardAds.map {
                 AnyView(

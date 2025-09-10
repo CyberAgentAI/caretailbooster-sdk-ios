@@ -17,14 +17,15 @@ public struct RetailBoosterAdView: View {
     public var body: some View {
         let _ = adVm.forceRefreshToken
         ScrollView(.horizontal, showsIndicators: !(adVm.options?.hiddenIndicators ?? true)) {
-            HStack(spacing: adVm.options?.rewardAdItemSpacing ?? 0) {
-                if let leadingMargin = adVm.options?.rewardAdLeadingMargin, leadingMargin > 0 {
+            HStack(spacing: adVm.options?.itemSpacing ?? 0) {
+                if let leadingMargin = adVm.options?.leadingMargin, leadingMargin > 0 {
                     Spacer()
                         .frame(width: leadingMargin)
                 }
                 if $adVm.adType.wrappedValue == .BANNER {
                     ForEach($adVm.bannerAds, id: \.index) { ad in
                         BannerAd(ad: ad.wrappedValue)
+                            .environmentObject(adVm)
                     }
                 } else if $adVm.adType.wrappedValue == .REWARD {
                     ForEach($adVm.rewardAds, id: \.index) { ad in
@@ -33,7 +34,7 @@ public struct RetailBoosterAdView: View {
                             .id("reward_\(ad.wrappedValue.index)_\(adVm.forceRefreshToken)")
                     }
                 }
-                if let trailingMargin = adVm.options?.rewardAdTrailingMargin, trailingMargin > 0 {
+                if let trailingMargin = adVm.options?.trailingMargin, trailingMargin > 0 {
                     Spacer()
                         .frame(width: trailingMargin)
                 }
