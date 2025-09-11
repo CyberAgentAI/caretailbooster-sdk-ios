@@ -134,7 +134,9 @@ typealias RewardAdsRequestBody = AdsRequest
 @MainActor
 @available(iOS 13.0, *)
 func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws -> GetRewardResponse {
-    print("API Call: getAds called at \(Date()) for tagGroupId: \(body.tagInfo.tagGroupId)")
+    #if DEBUG
+    print("[AdCall] API Call: getAds called at \(Date()) for tagGroupId: \(body.tagInfo.tagGroupId)")
+    #endif
     let url: String
     switch runMode {
     case RunMode.dev:
@@ -148,6 +150,9 @@ func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws -> GetRew
     default:
         url = Const.LOCAL_AD_SERVER_URL
     }
+    #if DEBUG
+    print("[AdCall] API Call: URL: \(url)")
+    #endif
     guard let components = URLComponents(string: url),
           let url = components.url else {
         throw URLError(.badURL)

@@ -95,7 +95,7 @@ extension SwiftUIWebView {
                 }
             }
             // Web view finished loading content
-            print("web view loaded")
+            print("[SwiftUIWebView] web view loaded")
         }
         
         // `window.open()` のリクエストを Safari で開く

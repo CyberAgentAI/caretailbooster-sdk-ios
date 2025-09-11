@@ -58,7 +58,7 @@ class BaseWebViewVM: ObservableObject {
     
     func loadWebPage(webResource: String) {
         guard let url = URL(string: webResource) else {
-            print("Bad URL")
+            print("[BaseWebViewVM] Bad URL")
             return
         }
         let request = URLRequest(url: url)
@@ -107,9 +107,9 @@ class BaseWebViewVM: ObservableObject {
             }
             UIApplication.shared.open(url, options: [:]) { success in
                 if !success {
-                    print("Failed to open URL: \(urlString)")
+                    print("[BaseWebViewVM] Failed to open URL: \(urlString)")
                 }
-                print("Opened URL: \(urlString)")
+                print("[BaseWebViewVM] Opened URL: \(urlString)")
             }
         }
     }

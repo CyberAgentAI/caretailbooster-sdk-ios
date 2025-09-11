@@ -103,7 +103,7 @@ struct AdTracking {
                         do {
                             try await impression(endpoint: endpoint, param: param)
                         } catch {
-                            print("Failed to track impression: \(error)")
+                            print("[AdTracking] Failed to track impression: \(error)")
                         }
                     }
                 }
