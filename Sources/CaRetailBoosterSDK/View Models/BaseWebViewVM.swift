@@ -43,6 +43,7 @@ class BaseWebViewVM: ObservableObject {
     var enableTracking: Bool = false
     var trackingEndpoint: String?
     var trackingParam: String?
+    var trackingAdId: Int?
 
     // init for banner
     init(bannerAd: Banner) {
@@ -122,11 +123,23 @@ class BaseWebViewVM: ObservableObject {
             bannerAd?.param
         }
         
-        // パラメータが取得でき、かつ未送信の場合のみ有効化
-        if let param = param,
-           let rewardVm = rewardVm,
-           let adId = adType == .REWARD ? ad?.ad_id : bannerAd?.ad_id,
-           !rewardVm.hasImpressionBeenSent(for: adId) {
+        // BannerAdの場合は重複チェックなし、RewardAdの場合のみ重複チェック
+        let shouldEnableTracking: Bool = switch adType {
+        case .REWARD:
+            if let param = param,
+               let rewardVm = rewardVm,
+               let adId = ad?.ad_id,
+               !rewardVm.hasImpressionBeenSent(for: adId) {
+                true
+            } else {
+                false
+            }
+        case .BANNER:
+            // BannerAdは重複チェックなし
+            param != nil
+        }
+        
+        if shouldEnableTracking {
             enableTracking = true
             trackingEndpoint = switch adType {
             case .REWARD:
@@ -135,13 +148,30 @@ class BaseWebViewVM: ObservableObject {
                 bannerAd?.imp_url ?? ""
             }
             self.trackingParam = param
+            
+            // ad_idも保存
+            self.trackingAdId = switch adType {
+            case .REWARD:
+                ad?.ad_id
+            case .BANNER:
+                bannerAd?.ad_id
+            }
+            
+            #if DEBUG
+            let adId = trackingAdId ?? 0
+            print("[BaseWebViewVM] Impression tracking enabled for \(adType) ad (ID: \(adId), endpoint: \(trackingEndpoint ?? "nil"))")
+            #endif
+        } else {
+            #if DEBUG
+            print("[BaseWebViewVM] Impression tracking NOT enabled for \(adType) ad - conditions not met")
+            #endif
         }
     }
     
     func stopTracking() {
         enableTracking = false
         Task { @MainActor in   
-            AdTracking.stopTracking(param: trackingParam ?? "")
+            AdTracking.stopTracking(param: trackingParam ?? "", adId: trackingAdId ?? 0)
         }
     }
 }

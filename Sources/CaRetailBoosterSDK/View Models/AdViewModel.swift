@@ -49,6 +49,7 @@ class AdViewModel: ObservableObject {
     }
     
     public func fetchAdsWithUIUpdate() async {
+        print("fetchAdsWithUIUpdate called at \(Date()) for tagGroupId: \(tagGroupId)")
         do {
             let body = RewardAdsRequestBody(
                 user: .init(id: userId),

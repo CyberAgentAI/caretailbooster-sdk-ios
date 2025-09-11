@@ -88,7 +88,8 @@ extension SwiftUIWebView {
                     AdTracking.trackImpression(
                         webView: webView,
                         endpoint: viewModel.trackingEndpoint ?? "",
-                        param: viewModel.trackingParam ?? ""
+                        param: viewModel.trackingParam ?? "",
+                        adId: viewModel.trackingAdId ?? 0
                     )
                     
                 }

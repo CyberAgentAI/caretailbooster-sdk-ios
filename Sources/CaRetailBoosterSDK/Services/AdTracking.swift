@@ -14,12 +14,28 @@ struct AdTracking {
         guard let url = components.url else {
             throw URLError(.badURL)
         }
+        
+        #if DEBUG
+        print("[AdTracking] Sending impression request to: \(url)")
+        #endif
+        
         let (_, response) = try await URLSession.shared.data(from: url)
         
         // if not 200, throw error
-        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+        guard let httpResponse = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)
         }
+        
+        guard httpResponse.statusCode == 200 else {
+            #if DEBUG
+            print("[AdTracking] Impression request failed with status code: \(httpResponse.statusCode)")
+            #endif
+            throw URLError(.badServerResponse)
+        }
+        
+        #if DEBUG
+        print("[AdTracking] Impression request successful for param: \(param)")
+        #endif
     }
     
     @MainActor
@@ -55,8 +71,12 @@ struct AdTracking {
     }
     
     @MainActor
-    static func trackImpression(webView: WKWebView, endpoint: String, param: String) {
-        let trackingKey = "impression_\(param)"
+    static func trackImpression(webView: WKWebView, endpoint: String, param: String, adId: Int) {
+        let trackingKey = "impression_\(adId)_\(param)"
+        
+        #if DEBUG
+        print("[AdTracking] Starting impression tracking for ad ID: \(adId), param: \(param)")
+        #endif
         
         // すでに動いているタイマーがあれば停止
         TimerManager.shared.stopTimer(for: trackingKey)
@@ -146,8 +166,8 @@ struct AdTracking {
     }
     
     @MainActor
-    static func stopTracking(param: String) {
-        let trackingKey = "impression_\(param)"
+    static func stopTracking(param: String, adId: Int) {
+        let trackingKey = "impression_\(adId)_\(param)"
         TimerManager.shared.stopTimer(for: trackingKey)
     }
 }

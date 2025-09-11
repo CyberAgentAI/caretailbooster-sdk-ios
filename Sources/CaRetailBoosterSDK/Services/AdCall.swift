@@ -134,6 +134,7 @@ typealias RewardAdsRequestBody = AdsRequest
 @MainActor
 @available(iOS 13.0, *)
 func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws -> GetRewardResponse {
+    print("API Call: getAds called at \(Date()) for tagGroupId: \(body.tagInfo.tagGroupId)")
     let url: String
     switch runMode {
     case RunMode.dev:
