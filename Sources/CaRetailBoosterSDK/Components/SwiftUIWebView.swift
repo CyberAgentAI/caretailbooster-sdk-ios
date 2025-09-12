@@ -88,13 +88,14 @@ extension SwiftUIWebView {
                     AdTracking.trackImpression(
                         webView: webView,
                         endpoint: viewModel.trackingEndpoint ?? "",
-                        param: viewModel.trackingParam ?? ""
+                        param: viewModel.trackingParam ?? "",
+                        adId: viewModel.trackingAdId ?? 0
                     )
                     
                 }
             }
             // Web view finished loading content
-            print("web view loaded")
+            print("[SwiftUIWebView] web view loaded")
         }
         
         // `window.open()` のリクエストを Safari で開く

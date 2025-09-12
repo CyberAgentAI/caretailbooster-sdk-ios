@@ -49,6 +49,9 @@ class AdViewModel: ObservableObject {
     }
     
     public func fetchAdsWithUIUpdate() async {
+        #if DEBUG
+        print("[AdViewModel] fetchAdsWithUIUpdate called at \(Date()) for tagGroupId: \(tagGroupId)")
+        #endif
         do {
             let body = RewardAdsRequestBody(
                 user: .init(id: userId),
@@ -79,7 +82,7 @@ class AdViewModel: ObservableObject {
                 }
             }
         } catch {
-            print("Error fetching ads: \(error)")
+            print("[AdViewModel] Error fetching ads: \(error)")
             NotificationCenter.default.post(name: NSNotification.Alert, object: nil)
         }
     }
