@@ -26,6 +26,8 @@ class AdViewModel: ObservableObject {
     private var lastFetchedRewardAds: [Reward] = []
     // impリクエストの送信状態を管理
     private var sentImpAdIds: Set<Int> = []
+    // WebView VMキャッシュ（事前ロード用）
+    private var webViewVMCache: [String: BaseWebViewVM] = [:]
     
     let mediaId: String
     let userId: String
@@ -70,6 +72,9 @@ class AdViewModel: ObservableObject {
                 let newAdIds = Set(res.rewardAds.map { $0.ad_id })
                 sentImpAdIds = sentImpAdIds.intersection(newAdIds)
 
+                // VMキャッシュをクリア
+                webViewVMCache.removeAll()
+
                 rewardAds = res.rewardAds
                 bannerAds = res.bannerAds
                 adType = res.adType
@@ -80,6 +85,7 @@ class AdViewModel: ObservableObject {
                 if hasRewardAdsChanged {
                     forceRefreshToken = UUID()
                 }
+                preloadWebViews()
             }
         } catch {
             print("[AdViewModel] Error fetching ads: \(error)")
@@ -122,5 +128,72 @@ class AdViewModel: ObservableObject {
     func closeModal() {
         activeModal = .none
         currentAd = nil
+    }
+    
+    private func preloadWebViews() {
+        guard let adType = adType else {
+            #if DEBUG
+            print("[AdViewModel] No adType set, skipping preload")
+            #endif
+            return
+        }
+        
+        switch adType {
+        case .REWARD:
+            #if DEBUG
+            print("[AdViewModel] Preloading WebViews for \(rewardAds.count) reward ads")
+            #endif
+            for ad in rewardAds {
+                let vm = BaseWebViewVM(ad: ad, rewardVm: self)
+                let key = "reward_\(ad.ad_id)_\(ad.param)"
+                webViewVMCache[key] = vm
+                // 非同期でロード開始
+                vm.loadWebPageOnce(webResource: ad.webview_url.contents)
+            }
+            
+        case .BANNER:
+            #if DEBUG
+            print("[AdViewModel] Preloading WebViews for \(bannerAds.count) banner ads")
+            #endif
+            for ad in bannerAds {
+                let vm = BaseWebViewVM(bannerAd: ad)
+                let key = "banner_\(ad.ad_id)_\(ad.param)"
+                webViewVMCache[key] = vm
+                // 非同期でロード開始
+                vm.loadWebPageOnce(webResource: ad.webview_url)
+            }
+        }
+    }
+    
+    func getOrCreateRewardVM(for ad: Reward) -> BaseWebViewVM {
+        let key = "reward_\(ad.ad_id)_\(ad.param)"
+        if let cached = webViewVMCache[key] {
+            #if DEBUG
+            print("[AdViewModel] Using cached VM for reward ad \(ad.ad_id)")
+            #endif
+            return cached
+        }
+        // フォールバック（キャッシュミス時）
+        #if DEBUG
+        print("[AdViewModel] Cache miss, creating new VM for reward ad \(ad.ad_id)")
+        #endif
+        let vm = BaseWebViewVM(ad: ad, rewardVm: self)
+        return vm
+    }
+    
+    func getOrCreateBannerVM(for ad: Banner) -> BaseWebViewVM {
+        let key = "banner_\(ad.ad_id)_\(ad.param)"
+        if let cached = webViewVMCache[key] {
+            #if DEBUG
+            print("[AdViewModel] Using cached VM for banner ad \(ad.ad_id)")
+            #endif
+            return cached
+        }
+        // フォールバック（キャッシュミス時）
+        #if DEBUG
+        print("[AdViewModel] Cache miss, creating new VM for banner ad \(ad.ad_id)")
+        #endif
+        let vm = BaseWebViewVM(bannerAd: ad)
+        return vm
     }
 }

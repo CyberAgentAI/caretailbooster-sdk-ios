@@ -17,11 +17,12 @@ struct BannerAd: View {
     }
     
     public var body: some View {
-        let vm = BaseWebViewVM(bannerAd: ad)
+        let vm = adVm.getOrCreateBannerVM(for: ad)
         SwiftUIWebView(viewModel: vm)
             .onAppear(perform: {
                 vm.enableImpTracking(adType: .BANNER)
-                vm.loadWebPage(webResource: ad.webview_url)
+                // 既に事前ロード済みの場合はスキップされる
+                vm.loadWebPageOnce(webResource: ad.webview_url)
             })
             .frame(
                 width: adVm.options?.size?.width ?? CGFloat(ad.width),

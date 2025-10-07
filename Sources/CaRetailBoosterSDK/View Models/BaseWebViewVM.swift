@@ -44,6 +44,9 @@ class BaseWebViewVM: ObservableObject {
     var trackingEndpoint: String?
     var trackingParam: String?
     var trackingAdId: Int?
+    
+    // WebViewロード済みフラグ（onAppear多重実行防止）
+    private var isLoaded: Bool = false
 
     // init for banner
     init(bannerAd: Banner) {
@@ -63,6 +66,17 @@ class BaseWebViewVM: ObservableObject {
         }
         let request = URLRequest(url: url)
         webView.load(request)
+    }
+    
+    func loadWebPageOnce(webResource: String) {
+        guard !isLoaded else {
+            #if DEBUG
+            print("[BaseWebViewVM] WebView already loaded, skipping reload")
+            #endif
+            return
+        }
+        loadWebPage(webResource: webResource)
+        isLoaded = true
     }
     
     // MARK: - Functions for messaging
