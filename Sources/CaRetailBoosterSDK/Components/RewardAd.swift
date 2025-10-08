@@ -17,14 +17,15 @@ struct RewardAd: View {
     }
     
     public var body: some View {
-        let vm = BaseWebViewVM(ad: ad, rewardVm: adVm)
+        let vm = adVm.getOrCreateRewardVM(for: ad)
         SwiftUIWebView(viewModel: vm)
             .onAppear(perform: {
                 if !adVm.hasImpressionBeenSent(for: ad.ad_id) {
                     vm.enableImpTracking(adType: .REWARD)
                     adVm.markImpressionSent(for: ad.ad_id)
                 }
-                vm.loadWebPage(webResource: ad.webview_url.contents)
+                // 既に事前ロード済みの場合はスキップされる
+                vm.loadWebPageOnce(webResource: ad.webview_url.contents)
             })
             .frame(width: adVm.options?.size?.width ?? 173, height: adVm.options?.size?.height ?? 210)
             .onReceive(NotificationCenter.default.publisher(for: NSNotification.Alert)) { data in
