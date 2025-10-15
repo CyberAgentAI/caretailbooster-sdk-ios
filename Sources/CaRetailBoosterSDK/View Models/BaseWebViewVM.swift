@@ -83,20 +83,41 @@ class BaseWebViewVM: ObservableObject {
     // メインスレッドで実行することで、スクロールなどとの処理競合を防ぐ
     @MainActor
     func messageFrom(fromHandler: MessageHandler, message: String) {
+        print("🟢 [messageFrom] START - Handler: \(fromHandler)")
+        print("🟢 [messageFrom] Message: \(message)")
+        print("🟢 [messageFrom] Thread: \(Thread.isMainThread ? "Main" : "Background")")
+        print("🟢 [messageFrom] ad: \(ad?.ad_id ?? -1), rewardVm: \(rewardVm != nil)")
+        
         switch fromHandler {
         case .playVideo:
+            print("🟢 [messageFrom] Case: playVideo")
             if let ad {
+                print("🟢 [messageFrom] Calling showModal for video - URL: \(message)")
                 rewardVm?.showModal(type: .video(url: message), ad: ad)
+                print("🟢 [messageFrom] showModal called")
+            } else {
+                print("🔴 [messageFrom] ERROR - ad is nil for playVideo")
             }
         case .playVideoSurvey:
+            print("🟢 [messageFrom] Case: playVideoSurvey")
             if let ad {
+                print("🟢 [messageFrom] Calling showModal for videoSurvey - URL: \(message)")
                 rewardVm?.showModal(type: .videoSurvey(url: message), ad: ad)
+                print("🟢 [messageFrom] showModal called")
+            } else {
+                print("🔴 [messageFrom] ERROR - ad is nil for playVideoSurvey")
             }
         case .showModal:
+            print("🟢 [messageFrom] Case: showModal")
             if let ad {
+                print("🟢 [messageFrom] Calling showModal for survey - URL: \(message)")
                 rewardVm?.showModal(type: .survey(url: message), ad: ad)
+                print("🟢 [messageFrom] showModal called")
+            } else {
+                print("🔴 [messageFrom] ERROR - ad is nil for showModal")
             }
         case .closeModal:
+            print("🟢 [messageFrom] Case: closeModal")
             rewardVm?.closeModal()
         case .onMarkSuccess:
             // マーク完了をSDKユーザーに通知

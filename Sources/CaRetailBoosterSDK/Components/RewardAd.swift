@@ -46,8 +46,13 @@ private struct RewardModalModifier: ViewModifier {
     
     private var isModalPresented: Binding<Bool> {
         Binding(
-            get: { adVm.activeModal.isPresented },
+            get: { 
+                let isPresented = adVm.activeModal.isPresented
+                print("🟣 [RewardModalModifier] isModalPresented.get: \(isPresented)")
+                return isPresented
+            },
             set: { newValue in
+                print("🟣 [RewardModalModifier] isModalPresented.set: \(newValue)")
                 if !newValue {
                     adVm.closeModal()
                 }
@@ -56,20 +61,33 @@ private struct RewardModalModifier: ViewModifier {
     }
 
     func body(content: Content) -> some View {
+        let _ = print("🟣 [RewardModalModifier.body] Building view")
+        let _ = print("🟣 [RewardModalModifier.body] activeModal.isPresented: \(adVm.activeModal.isPresented)")
+        let _ = print("🟣 [RewardModalModifier.body] activeModal.url: \(adVm.activeModal.url ?? "nil")")
+        
         if #available(iOS 15.0, *) {
             content
                 .fullScreenCover(
                     isPresented: isModalPresented,
+                    onDismiss: {
+                        print("🟣 [RewardModalModifier] fullScreenCover dismissed")
+                    },
                     content: {
+                        let _ = print("🟣 [RewardModalModifier] fullScreenCover content building")
                         if let url = adVm.activeModal.url {
+                            let _ = print("🟣 [RewardModalModifier] URL available: \(url)")
                             let modalVm = BaseWebViewVM(ad: adVm.currentAd, rewardVm: adVm)
                             VStack {
                                 SwiftUIWebView(viewModel: modalVm)
                                     .onAppear {
+                                        print("🟣 [RewardModalModifier] Modal WebView appeared")
                                         modalVm.loadWebPage(webResource: url)
                                     }
                             }
                             .background(.black.opacity(0.5))
+                        } else {
+                            let _ = print("🔴 [RewardModalModifier] ERROR - URL is nil in content block")
+                            EmptyView()
                         }
                     }
                 )
@@ -78,15 +96,21 @@ private struct RewardModalModifier: ViewModifier {
                 .fullScreenModal(
                     isPresented: isModalPresented,
                     content: {
+                        let _ = print("🟣 [RewardModalModifier] fullScreenModal content building (iOS <15)")
                         if let url = adVm.activeModal.url {
+                            let _ = print("🟣 [RewardModalModifier] URL available (iOS <15): \(url)")
                             let modalVm = BaseWebViewVM(ad: adVm.currentAd, rewardVm: adVm)
                             VStack {
                                 SwiftUIWebView(viewModel: modalVm)
                                     .onAppear {
+                                        print("🟣 [RewardModalModifier] Modal WebView appeared (iOS <15)")
                                         modalVm.loadWebPage(webResource: url)
                                     }
                             }
                             .background(Color.black.opacity(0.5))
+                        } else {
+                            let _ = print("🔴 [RewardModalModifier] ERROR - URL is nil in content block (iOS <15)")
+                            EmptyView()
                         }
                     }
                 )

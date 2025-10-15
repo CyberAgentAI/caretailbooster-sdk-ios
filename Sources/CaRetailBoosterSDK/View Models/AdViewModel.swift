@@ -121,13 +121,30 @@ class AdViewModel: ObservableObject {
     }
 
     func showModal(type: ModalType, ad: Reward) {
+        print("🟡 [AdViewModel.showModal] START")
+        print("🟡 [AdViewModel.showModal] Type: \(type)")
+        print("🟡 [AdViewModel.showModal] Ad ID: \(ad.ad_id)")
+        print("🟡 [AdViewModel.showModal] URL: \(type.url ?? "nil")")
+        print("🟡 [AdViewModel.showModal] Thread: \(Thread.isMainThread ? "Main" : "Background")")
+        print("🟡 [AdViewModel.showModal] Before update - activeModal.isPresented: \(activeModal.isPresented)")
+        
         currentAd = ad
         activeModal = type
+        
+        print("🟡 [AdViewModel.showModal] After update - activeModal.isPresented: \(activeModal.isPresented)")
+        print("🟡 [AdViewModel.showModal] After update - currentAd: \(currentAd?.ad_id ?? -1)")
+        print("🟡 [AdViewModel.showModal] END")
+        
+        // 強制的にUI更新を通知
+        objectWillChange.send()
+        print("🟡 [AdViewModel.showModal] objectWillChange.send() called")
     }
 
     func closeModal() {
+        print("🟡 [AdViewModel.closeModal] START")
         activeModal = .none
         currentAd = nil
+        print("🟡 [AdViewModel.closeModal] END")
     }
     
     private func preloadWebViews() {

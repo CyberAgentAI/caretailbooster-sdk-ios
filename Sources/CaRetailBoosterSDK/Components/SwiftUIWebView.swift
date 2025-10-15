@@ -11,6 +11,8 @@ struct SwiftUIWebView: UIViewRepresentable {
     }
     
     func makeUIView(context: Context) -> WKWebView {
+        print("⚪️ [SwiftUIWebView.makeUIView] Creating WebView")
+        
         let userContentController = vm.webView
             .configuration
             .userContentController
@@ -56,6 +58,13 @@ struct SwiftUIWebView: UIViewRepresentable {
         vm.webView.uiDelegate = context.coordinator
         vm.webView.navigationDelegate = context.coordinator
         
+        // タップジェスチャーのデバッグ
+        let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleDebugTap))
+        tapGesture.cancelsTouchesInView = false
+        vm.webView.addGestureRecognizer(tapGesture)
+        
+        print("⚪️ [SwiftUIWebView.makeUIView] WebView created with gesture recognizer")
+        
         return vm.webView
     }
     
@@ -82,6 +91,19 @@ extension SwiftUIWebView {
             _ webView: WKWebView,
             didFinish navigation: WKNavigation!
         ) {
+            print("⚪️ [webView.didFinish] URL: \(webView.url?.absoluteString ?? "nil")")
+            print("⚪️ [webView.didFinish] Can evaluate JS: true")
+            
+            // メッセージハンドラーが登録されているか確認
+            webView.evaluateJavaScript("typeof window.webkit !== 'undefined' && typeof window.webkit.messageHandlers !== 'undefined'") { result, error in
+                if let result = result {
+                    print("⚪️ [webView.didFinish] webkit.messageHandlers available: \(result)")
+                }
+                if let error = error {
+                    print("🔴 [webView.didFinish] JS evaluation error: \(error)")
+                }
+            }
+            
             // ページ読み込み完了後に可視性の監視を開始
             if viewModel.enableTracking {
                 Task { @MainActor in
@@ -112,15 +134,35 @@ extension SwiftUIWebView {
             self.viewModel = viewModel
         }
         
+        // MARK: - Debug tap handler
+        @objc func handleDebugTap(_ gesture: UITapGestureRecognizer) {
+            let location = gesture.location(in: gesture.view)
+            print("⚪️ [handleDebugTap] Native tap detected at: \(location)")
+            print("⚪️ [handleDebugTap] WebView isLoading: \(viewModel.webView.isLoading)")
+            print("⚪️ [handleDebugTap] WebView URL: \(viewModel.webView.url?.absoluteString ?? "nil")")
+        }
+        
         // MARK: - WKScriptMessageHandler delegate function
         func userContentController(
             _ userContentController: WKUserContentController,
             didReceive message: WKScriptMessage
         ) {
+            print("🔵 [userContentController] START - Message received")
+            print("🔵 [userContentController] Message name: \(message.name)")
+            print("🔵 [userContentController] Message body: \(message.body)")
+            print("🔵 [userContentController] Thread: \(Thread.isMainThread ? "Main" : "Background")")
+            
             guard let fromHandler = MessageHandler(rawValue: message.name) else {
+                print("🔴 [userContentController] ERROR - Unknown message handler: \(message.name)")
                 return
             }
+            
+            print("🔵 [userContentController] Handler recognized: \(fromHandler)")
+            print("🔵 [userContentController] Calling messageFrom...")
+            
             self.viewModel.messageFrom(fromHandler: fromHandler, message: message.body as? String ?? "")
+            
+            print("🔵 [userContentController] END - messageFrom called")
         }
     }
 }
