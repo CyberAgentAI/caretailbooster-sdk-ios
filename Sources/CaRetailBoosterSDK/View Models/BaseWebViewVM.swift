@@ -80,7 +80,8 @@ class BaseWebViewVM: ObservableObject {
     }
     
     // MARK: - Functions for messaging
-    
+    // メインスレッドで実行することで、スクロールなどとの処理競合を防ぐ
+    @MainActor
     func messageFrom(fromHandler: MessageHandler, message: String) {
         switch fromHandler {
         case .playVideo:
