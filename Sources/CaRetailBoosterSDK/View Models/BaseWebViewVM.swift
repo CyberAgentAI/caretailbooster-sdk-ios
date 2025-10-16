@@ -9,6 +9,7 @@ enum MessageHandler: String, CaseIterable {
     case onRewardFinish
     case fetchAds
     case openUrl
+    case consoleLog
 }
 
 @MainActor
@@ -135,7 +136,7 @@ class BaseWebViewVM: ObservableObject {
             // notificationを使用して、Flutter側にfetchAdsを通知する
             NotificationCenter.default.post(name: NSNotification.FetchAds, object: nil)
         case .openUrl:
-            guard 
+            guard
                 let bannerAd,
                 let urlString = bannerAd.landing_page_url,
                 let url = URL(string: urlString) else {
@@ -147,6 +148,10 @@ class BaseWebViewVM: ObservableObject {
                 }
                 print("[BaseWebViewVM] Opened URL: \(urlString)")
             }
+        case .consoleLog:
+            // consoleLog is handled in SwiftUIWebView.Coordinator
+            // This case should not be reached
+            break
         }
     }
     
