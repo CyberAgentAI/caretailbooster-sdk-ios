@@ -55,6 +55,7 @@ struct GetRewardResponse {
 enum AdType: String {
     case BANNER
     case REWARD
+    case POPUP
 }
 
 struct TagGroup: Decodable {
@@ -184,7 +185,9 @@ func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws -> GetRew
     } else if res.ad_type == AdType.REWARD.rawValue {
         let rewardAds = try JSONDecoder().decode(RewardAds.self, from: data)
         return GetRewardResponse(adType: .REWARD, tagGroup: rewardAds.tagGroup, rewardAds: rewardAds.ads, bannerAds: [])
-    }
+    } else if res.ad_type == AdType.POPUP.rawValue {
+        // TODO: - Popup ads will be handled separately in future implementation
+        return GetRewardResponse(adType: nil, tagGroup: nil, rewardAds: [], bannerAds: [])
 
     return GetRewardResponse(adType: nil, tagGroup: nil, rewardAds: [], bannerAds: [])
 }
