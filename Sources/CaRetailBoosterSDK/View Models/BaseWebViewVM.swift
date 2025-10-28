@@ -99,10 +99,10 @@ class BaseWebViewVM: ObservableObject {
             rewardVm?.closeModal()
         case .onMarkSuccess:
             // マーク完了をSDKユーザーに通知
-            rewardVm?.callback?.onMarkSucceeded()
+            rewardVm?.rewardCallback?.onMarkSucceeded?()
         case .onRewardFinish:
             // リワード獲得をSDKユーザーに通知
-            rewardVm?.callback?.onRewardModalClosed()
+            rewardVm?.rewardCallback?.onRewardModalClosed?()
         case .fetchAds:
             // 広告を取得
             Task {
