@@ -205,6 +205,8 @@ class AdViewModel: ObservableObject {
                 // 非同期でロード開始
                 vm.loadWebPageOnce(webResource: ad.webview_url)
             }
+        case .POPUP:
+            break
         }
     }
     

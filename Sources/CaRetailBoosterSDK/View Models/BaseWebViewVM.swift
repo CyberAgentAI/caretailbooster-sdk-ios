@@ -135,6 +135,8 @@ class BaseWebViewVM: ObservableObject {
             ad?.param
         case .BANNER:
             bannerAd?.param
+        case .POPUP:
+            nil
         }
         
         // BannerAdの場合は重複チェックなし、RewardAdの場合のみ重複チェック
@@ -151,6 +153,8 @@ class BaseWebViewVM: ObservableObject {
         case .BANNER:
             // BannerAdは重複チェックなし
             param != nil
+            case .POPUP:
+            false
         }
         
         if shouldEnableTracking {
@@ -160,6 +164,8 @@ class BaseWebViewVM: ObservableObject {
                 ad?.imp_url ?? ""
             case .BANNER:
                 bannerAd?.imp_url ?? ""
+            case .POPUP:
+                ""
             }
             self.trackingParam = param
             
@@ -169,6 +175,8 @@ class BaseWebViewVM: ObservableObject {
                 ad?.ad_id
             case .BANNER:
                 bannerAd?.ad_id
+            case .POPUP:
+                nil
             }
             
             #if DEBUG

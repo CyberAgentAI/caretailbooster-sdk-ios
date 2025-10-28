@@ -188,6 +188,7 @@ func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws -> GetRew
     } else if res.ad_type == AdType.POPUP.rawValue {
         // TODO: - Popup ads will be handled separately in future implementation
         return GetRewardResponse(adType: nil, tagGroup: nil, rewardAds: [], bannerAds: [])
+    }
 
     return GetRewardResponse(adType: nil, tagGroup: nil, rewardAds: [], bannerAds: [])
 }

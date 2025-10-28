@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 @available(iOS 13.0, *)
 public class RtBPopupAd: OverlayAd {
     public let tagGroupId: String
