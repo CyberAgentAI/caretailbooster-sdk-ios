@@ -21,20 +21,9 @@ public struct BannerOptions {
 
 public struct RewardOptions {
     public let size: SizeOption?
-    public let itemSpacing: CGFloat?
-    public let leadingMargin: CGFloat?
-    public let trailingMargin: CGFloat?
 
-    public init(
-        size: SizeOption? = nil,
-        itemSpacing: CGFloat? = nil,
-        leadingMargin: CGFloat? = nil,
-        trailingMargin: CGFloat? = nil
-    ) {
+    public init(size: SizeOption? = nil) {
         self.size = size
-        self.itemSpacing = itemSpacing
-        self.leadingMargin = leadingMargin
-        self.trailingMargin = trailingMargin
     }
 }
 
