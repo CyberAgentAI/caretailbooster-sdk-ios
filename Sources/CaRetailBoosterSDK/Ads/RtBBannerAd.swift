@@ -85,4 +85,15 @@ public class RtBBannerAd: ViewableAd {
             vm?.resetImpressionSentAdIds()
         }
     }
+
+    // Test init - inject mock ViewModel
+    #if DEBUG
+    internal init(tagGroupId: String, eventName: String? = nil, options: BannerOptions? = nil, mockViewModel: AdViewModel) {
+        self.tagGroupId = tagGroupId
+        self.eventName = eventName
+        self.options = options
+        self.viewModel = mockViewModel
+        self.isLoaded = true
+    }
+    #endif
 }

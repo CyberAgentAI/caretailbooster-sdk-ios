@@ -119,6 +119,16 @@ public class RetailBooster {
     internal static var currentConfig: RetailBoosterConfig? {
         return config
     }
+
+    #if DEBUG
+    internal static func reset() async {
+        await MainActor.run {
+            config = nil
+            isInit = false
+            logLevel = .none
+        }
+    }
+    #endif
 }
 
 internal struct RetailBoosterConfig {

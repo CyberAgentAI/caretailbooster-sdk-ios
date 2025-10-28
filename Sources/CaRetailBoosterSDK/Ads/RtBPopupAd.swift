@@ -112,4 +112,16 @@ public class RtBPopupAd: OverlayAd {
         }
         return topController
     }
+
+    // Test init - inject mock ViewModel
+    #if DEBUG
+    internal init(tagGroupId: String, eventName: String? = nil, options: PopupOptions? = nil, callback: PopupCallback = PopupCallback(), mockViewModel: AdViewModel) {
+        self.tagGroupId = tagGroupId
+        self.eventName = eventName
+        self.options = options
+        self.callback = callback
+        self.viewModel = mockViewModel
+        self.isLoaded = true
+    }
+    #endif
 }

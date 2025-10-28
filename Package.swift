@@ -21,6 +21,11 @@ let package = Package(
             name: "CaRetailBoosterSDK",
             path: "Sources/CaRetailBoosterSDK",
             resources: [.copy("PrivacyInfo.xcprivacy")]
+        ),
+        .testTarget(
+            name: "CaRetailBoosterSDKTests",
+            dependencies: ["CaRetailBoosterSDK"],
+            path: "Tests/CaRetailBoosterSDKTests"
         )
     ]
 )

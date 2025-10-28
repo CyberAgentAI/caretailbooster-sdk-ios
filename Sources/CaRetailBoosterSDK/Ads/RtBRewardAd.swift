@@ -100,4 +100,16 @@ public class RtBRewardAd: ViewableAd {
             vm?.resetImpressionSentAdIds()
         }
     }
+
+    // Test init - inject mock ViewModel
+    #if DEBUG
+    internal init(tagGroupId: String, eventName: String? = nil, options: RewardOptions? = nil, callback: RewardCallback = RewardCallback(), mockViewModel: AdViewModel) {
+        self.tagGroupId = tagGroupId
+        self.eventName = eventName
+        self.options = options
+        self.callback = callback
+        self.viewModel = mockViewModel
+        self.isLoaded = true
+    }
+    #endif
 }
