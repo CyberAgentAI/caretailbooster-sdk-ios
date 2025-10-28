@@ -1,16 +1,5 @@
 import Foundation
 
-// TODO: - 既存の Callback を削除
-public struct Callback {
-    var onMarkSucceeded: () -> Void?
-    var onRewardModalClosed: () -> Void?
-    
-    public init(onMarkSucceeded: @escaping () -> Void?, onRewardModalClosed: @escaping () -> Void?) {
-        self.onMarkSucceeded = onMarkSucceeded
-        self.onRewardModalClosed = onRewardModalClosed
-    }
-}
-
 public struct RewardCallback {
     public var onMarkSucceeded: (() -> Void)?
     public var onRewardModalClosed: (() -> Void)?
