@@ -19,17 +19,12 @@ public class RtBBannerAd: ViewableAd {
     private var viewModel: AdViewModel?
     private var isLoaded: Bool = false
 
-    public init?(tagGroupId: String, eventName: String? = nil, options: BannerOptions? = nil) {
-        guard RetailBooster.isInitialized else {
-            Log.error("Error: SDK not initialized", context: "RtBBannerAd")
-            return nil
-        }
-
+    public init(tagGroupId: String, eventName: String? = nil, options: BannerOptions? = nil) {
         self.tagGroupId = tagGroupId
         self.eventName = eventName
         self.options = options
 
-        Log.info("Initialized with tagGroupId: \(tagGroupId)", context: "RtBBannerAd")
+        Log.debug("Initialized with tagGroupId: \(tagGroupId)", context: "RtBBannerAd")
     }
 
     public func load() async throws {

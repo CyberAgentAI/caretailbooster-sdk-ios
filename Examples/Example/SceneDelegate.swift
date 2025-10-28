@@ -121,12 +121,6 @@ struct BannerAdExampleView: View {
             options: BannerOptions(size: SizeOption(width: 360, height: 120))
         )
 
-        guard let ad = ad else {
-            errorMessage = "Failed to initialize Banner Ad"
-            isLoading = false
-            return
-        }
-
         Task {
             do {
                 try await ad.load()
@@ -226,12 +220,6 @@ struct RewardAdExampleView: View {
             }
         }
 
-        guard let ad = ad else {
-            errorMessage = "Failed to initialize Reward Ad"
-            isLoading = false
-            return
-        }
-
         Task {
             do {
                 try await ad.load()
@@ -317,13 +305,6 @@ struct PopupAdExampleView: View {
             callback.onInnerLink = { url in
                 print("Inner link clicked: \(url)")
             }
-        }
-
-        guard let ad = ad else {
-            errorMessage = "Failed to initialize Popup Ad"
-            statusMessage = "Failed to initialize"
-            isLoading = false
-            return
         }
 
         Task {

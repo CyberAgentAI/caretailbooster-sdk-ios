@@ -20,17 +20,12 @@ public class RtBRewardAd: ViewableAd {
     private var viewModel: AdViewModel?
     private var isLoaded: Bool = false
 
-    public init?(
+    public init(
         tagGroupId: String,
         eventName: String? = nil,
         options: RewardOptions? = nil,
         configureCallback: ((inout RewardCallback) -> Void)? = nil
     ) {
-        guard RetailBooster.isInitialized else {
-            Log.error("Error: SDK not initialized", context: "RtBRewardAd")
-            return nil
-        }
-
         self.tagGroupId = tagGroupId
         self.eventName = eventName
         self.options = options
@@ -39,7 +34,7 @@ public class RtBRewardAd: ViewableAd {
         configureCallback?(&callback)
         self.callback = callback
 
-        Log.info("Initialized with tagGroupId: \(tagGroupId)", context: "RtBRewardAd")
+        Log.debug("Initialized with tagGroupId: \(tagGroupId)", context: "RtBRewardAd")
     }
 
     public func load() async throws {

@@ -13,17 +13,12 @@ public class RtBPopupAd: OverlayAd {
     private var isLoaded: Bool = false
     private var isUsed: Bool = false
 
-    public init?(
+    public init(
         tagGroupId: String,
         eventName: String? = nil,
         options: PopupOptions? = nil,
         configureCallback: ((inout PopupCallback) -> Void)? = nil
     ) {
-        guard RetailBooster.isInitialized else {
-            Log.error("Error: SDK not initialized", context: "RtBPopupAd")
-            return nil
-        }
-
         self.tagGroupId = tagGroupId
         self.eventName = eventName
         self.options = options
@@ -32,7 +27,7 @@ public class RtBPopupAd: OverlayAd {
         configureCallback?(&callback)
         self.callback = callback
 
-        Log.info("Initialized with tagGroupId: \(tagGroupId)", context: "RtBPopupAd")
+        Log.debug("Initialized with tagGroupId: \(tagGroupId)", context: "RtBPopupAd")
     }
 
     public func load() async throws {
