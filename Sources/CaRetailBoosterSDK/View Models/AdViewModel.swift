@@ -17,8 +17,11 @@ class AdViewModel: ObservableObject {
 
     @Published var activeModal: ModalType = .none
     @Published var currentAd: Reward?
-    @Published public var callback: Callback?
-    @Published public var options: Options?
+    @Published public var rewardCallback: RewardCallback?
+    @Published public var popupCallback: PopupCallback?
+    @Published public var bannerOptions: BannerOptions?
+    @Published public var rewardOptions: RewardOptions?
+    @Published public var popupOptions: PopupOptions?
     
     // 強制リフレッシュ用プロパティ
     @Published public var forceRefreshToken = UUID()
@@ -34,20 +37,60 @@ class AdViewModel: ObservableObject {
     let crypto: String
     let tagGroupId: String
     let runMode: RunMode
-    
-    public init(mediaId: String, userId: String, crypto: String, tagGroupId: String, runMode: RunMode, callback: Callback? = nil, options: Options? = nil) {
+
+    // Banner広告用 init
+    public init(
+        mediaId: String,
+        userId: String,
+        crypto: String,
+        tagGroupId: String,
+        runMode: RunMode,
+        bannerOptions: BannerOptions? = nil
+    ) {
         self.mediaId = mediaId
         self.userId = userId
         self.crypto = crypto
         self.tagGroupId = tagGroupId
         self.runMode = runMode
-        
-        if let callback = callback {
-            self.callback = callback
-        }
-        if let options = options {
-            self.options = options
-        }
+        self.bannerOptions = bannerOptions
+    }
+
+    // Reward広告用 init
+    public init(
+        mediaId: String,
+        userId: String,
+        crypto: String,
+        tagGroupId: String,
+        runMode: RunMode,
+        rewardCallback: RewardCallback? = nil,
+        rewardOptions: RewardOptions? = nil
+    ) {
+        self.mediaId = mediaId
+        self.userId = userId
+        self.crypto = crypto
+        self.tagGroupId = tagGroupId
+        self.runMode = runMode
+        self.rewardCallback = rewardCallback
+        self.rewardOptions = rewardOptions
+    }
+
+    // Popup広告用 init（将来の実装のため）
+    public init(
+        mediaId: String,
+        userId: String,
+        crypto: String,
+        tagGroupId: String,
+        runMode: RunMode,
+        popupCallback: PopupCallback? = nil,
+        popupOptions: PopupOptions? = nil
+    ) {
+        self.mediaId = mediaId
+        self.userId = userId
+        self.crypto = crypto
+        self.tagGroupId = tagGroupId
+        self.runMode = runMode
+        self.popupCallback = popupCallback
+        self.popupOptions = popupOptions
     }
     
     public func fetchAdsWithUIUpdate() async {
