@@ -7,6 +7,14 @@ public class RtBBannerAd: ViewableAd {
     public let eventName: String?
     public let options: BannerOptions?
 
+    public var areaName: String? {
+        viewModel?.areaName
+    }
+
+    public var areaDescription: String? {
+        viewModel?.areaDescription
+    }
+
     private var viewModel: AdViewModel?
     private var isLoaded: Bool = false
 
@@ -67,6 +75,13 @@ public class RtBBannerAd: ViewableAd {
 
         return vm.bannerAds.map { ad in
             AnyView(BannerAd(ad: ad).environmentObject(vm))
+        }
+    }
+
+    deinit {
+        let vm = self.viewModel
+        Task { @MainActor in
+            vm?.resetImpressionSentAdIds()
         }
     }
 }

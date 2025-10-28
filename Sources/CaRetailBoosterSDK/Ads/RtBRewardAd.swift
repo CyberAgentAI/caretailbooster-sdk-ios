@@ -8,6 +8,14 @@ public class RtBRewardAd: ViewableAd {
     public let options: RewardOptions?
     private var callback: RewardCallback
 
+    public var areaName: String? {
+        viewModel?.areaName
+    }
+
+    public var areaDescription: String? {
+        viewModel?.areaDescription
+    }
+
     private var viewModel: AdViewModel?
     private var isLoaded: Bool = false
 
@@ -82,6 +90,13 @@ public class RtBRewardAd: ViewableAd {
                     .environmentObject(vm)
                     .id("reward_\(ad.index)_\(vm.forceRefreshToken)")
             )
+        }
+    }
+
+    deinit {
+        let vm = self.viewModel
+        Task { @MainActor in
+            vm?.resetImpressionSentAdIds()
         }
     }
 }
