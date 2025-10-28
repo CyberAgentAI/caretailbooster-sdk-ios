@@ -27,9 +27,7 @@ public class RtBRewardAd: ViewableAd {
         configureCallback: ((inout RewardCallback) -> Void)? = nil
     ) {
         guard RetailBooster.isInitialized else {
-            #if DEBUG
-            print("[RtBRewardAd] Error: SDK not initialized")
-            #endif
+            Log.error("Error: SDK not initialized", context: "RtBRewardAd")
             return nil
         }
 
@@ -41,9 +39,7 @@ public class RtBRewardAd: ViewableAd {
         configureCallback?(&callback)
         self.callback = callback
 
-        #if DEBUG
-        print("[RtBRewardAd] Initialized with tagGroupId: \(tagGroupId)")
-        #endif
+        Log.info("Initialized with tagGroupId: \(tagGroupId)", context: "RtBRewardAd")
     }
 
     public func load() async throws {
@@ -55,9 +51,7 @@ public class RtBRewardAd: ViewableAd {
             throw RetailBoosterError.userInfoNotSet
         }
 
-        #if DEBUG
-        print("[RtBRewardAd] Loading reward ads for tagGroupId: \(tagGroupId)")
-        #endif
+        Log.info("Loading reward ads for tagGroupId: \(tagGroupId)", context: "RtBRewardAd")
 
         await MainActor.run {
             self.viewModel = AdViewModel(
@@ -74,10 +68,8 @@ public class RtBRewardAd: ViewableAd {
         await viewModel?.fetchAdsWithUIUpdate()
         isLoaded = true
 
-        #if DEBUG
         let adCount = viewModel?.rewardAds.count ?? 0
-        print("[RtBRewardAd] Loaded \(adCount) reward ads")
-        #endif
+        Log.info("Loaded \(adCount) reward ads", context: "RtBRewardAd")
     }
 
     public var views: [AnyView] {

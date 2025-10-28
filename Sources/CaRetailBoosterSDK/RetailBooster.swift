@@ -5,7 +5,7 @@ import Foundation
 public class RetailBooster {
     private static var config: RetailBoosterConfig?
     private static var isInit: Bool = false
-    private static var logLevel: LogLevel = .none
+    nonisolated(unsafe) internal static var logLevel: LogLevel = .none
 
     public static func initialize(mediaId: String, mode: RunMode) {
         config = RetailBoosterConfig(
@@ -13,23 +13,13 @@ public class RetailBooster {
             mode: mode
         )
         isInit = true
-
-        #if DEBUG
-        if logLevel != .none {
-            print("[RetailBooster] SDK initialized with mediaId: \(mediaId), mode: \(mode)")
-        }
-        #endif
+        Log.info("SDK initialized with mediaId: \(mediaId), mode: \(mode)", context: "RetailBooster")
     }
 
     public static func setUserInfo(userId: String, crypto: String) {
         config?.userId = userId
         config?.crypto = crypto
-
-        #if DEBUG
-        if logLevel != .none {
-            print("[RetailBooster] User info set for userId: \(userId)")
-        }
-        #endif
+        Log.info("User info set for userId: \(userId)", context: "RetailBooster")
     }
 
     @MainActor
@@ -38,30 +28,18 @@ public class RetailBooster {
         completion: @escaping (Result<Bool, RetailBoosterError>) -> Void
     ) {
         guard isInit else {
-            #if DEBUG
-            if logLevel != .none {
-                print("[RetailBooster] Error: SDK not initialized")
-            }
-            #endif
+            Log.error("Error: SDK not initialized", context: "RetailBooster")
             completion(.failure(.notInitialized))
             return
         }
 
         guard isUserInfoSet else {
-            #if DEBUG
-            if logLevel != .none {
-                print("[RetailBooster] Error: User info not set")
-            }
-            #endif
+            Log.error("Error: User info not set", context: "RetailBooster")
             completion(.failure(.userInfoNotSet))
             return
         }
 
-        #if DEBUG
-        if logLevel != .none {
-            print("[RetailBooster] Loading ad for tagGroupId: \(ad.tagGroupId)")
-        }
-        #endif
+        Log.info("Loading ad for tagGroupId: \(ad.tagGroupId)", context: "RetailBooster")
 
         Task {
             do {
@@ -76,21 +54,13 @@ public class RetailBooster {
                     hasAd = false
                 }
 
-                #if DEBUG
-                if logLevel != .none {
-                    print("[RetailBooster] Ad loaded successfully. Has ad: \(hasAd)")
-                }
-                #endif
+                Log.info("Ad loaded successfully. Has ad: \(hasAd)", context: "RetailBooster")
 
                 await MainActor.run {
                     completion(.success(hasAd))
                 }
             } catch {
-                #if DEBUG
-                if logLevel != .none {
-                    print("[RetailBooster] Error loading ad: \(error.localizedDescription)")
-                }
-                #endif
+                Log.error("Error loading ad: \(error.localizedDescription)", context: "RetailBooster")
 
                 await MainActor.run {
                     completion(.failure(.loadFailed(error)))
@@ -112,8 +82,14 @@ public class RetailBooster {
         logLevel = level
 
         #if DEBUG
-        print("[RetailBooster] Log level set to: \(level)")
+        if level != .none {
+            print("[RetailBooster][INFO] Log level set to: \(level)")
+        }
         #endif
+    }
+
+    nonisolated(unsafe) internal static func getLogLevel() -> LogLevel {
+        return logLevel
     }
 
     internal static var currentConfig: RetailBoosterConfig? {

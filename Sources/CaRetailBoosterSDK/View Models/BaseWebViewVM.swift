@@ -61,7 +61,7 @@ class BaseWebViewVM: ObservableObject {
     
     func loadWebPage(webResource: String) {
         guard let url = URL(string: webResource) else {
-            print("[BaseWebViewVM] Bad URL")
+            Log.error("Bad URL", context: "BaseWebViewVM")
             return
         }
         let request = URLRequest(url: url)
@@ -70,9 +70,7 @@ class BaseWebViewVM: ObservableObject {
     
     func loadWebPageOnce(webResource: String) {
         guard !isLoaded else {
-            #if DEBUG
-            print("[BaseWebViewVM] WebView already loaded, skipping reload")
-            #endif
+            Log.debug("WebView already loaded, skipping reload", context: "BaseWebViewVM")
             return
         }
         loadWebPage(webResource: webResource)
@@ -121,9 +119,10 @@ class BaseWebViewVM: ObservableObject {
             }
             UIApplication.shared.open(url, options: [:]) { success in
                 if !success {
-                    print("[BaseWebViewVM] Failed to open URL: \(urlString)")
+                    Log.error("Failed to open URL: \(urlString)", context: "BaseWebViewVM")
+                } else {
+                    Log.info("Opened URL: \(urlString)", context: "BaseWebViewVM")
                 }
-                print("[BaseWebViewVM] Opened URL: \(urlString)")
             }
         }
     }
@@ -178,15 +177,11 @@ class BaseWebViewVM: ObservableObject {
             case .POPUP:
                 nil
             }
-            
-            #if DEBUG
+
             let adId = trackingAdId ?? 0
-            print("[BaseWebViewVM] Impression tracking enabled for \(adType) ad (ID: \(adId), endpoint: \(trackingEndpoint ?? "nil"))")
-            #endif
+            Log.debug("Impression tracking enabled for \(adType) ad (ID: \(adId), endpoint: \(trackingEndpoint ?? "nil"))", context: "BaseWebViewVM")
         } else {
-            #if DEBUG
-            print("[BaseWebViewVM] Impression tracking NOT enabled for \(adType) ad - conditions not met")
-            #endif
+            Log.debug("Impression tracking NOT enabled for \(adType) ad - conditions not met", context: "BaseWebViewVM")
         }
     }
     

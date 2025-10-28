@@ -29,7 +29,7 @@ struct RewardAd: View {
             })
             .frame(width: adVm.rewardOptions?.size?.width ?? 173, height: adVm.rewardOptions?.size?.height ?? 210)
             .onReceive(NotificationCenter.default.publisher(for: NSNotification.Alert)) { data in
-                print("[RewardAd] Alert notification received")
+                Log.debug("Alert notification received", context: "RewardAd")
                 // TODO: エラー通知
                 showErrorAlert = true
             }

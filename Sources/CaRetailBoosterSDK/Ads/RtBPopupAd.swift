@@ -20,9 +20,7 @@ public class RtBPopupAd: OverlayAd {
         configureCallback: ((inout PopupCallback) -> Void)? = nil
     ) {
         guard RetailBooster.isInitialized else {
-            #if DEBUG
-            print("[RtBPopupAd] Error: SDK not initialized")
-            #endif
+            Log.error("Error: SDK not initialized", context: "RtBPopupAd")
             return nil
         }
 
@@ -34,9 +32,7 @@ public class RtBPopupAd: OverlayAd {
         configureCallback?(&callback)
         self.callback = callback
 
-        #if DEBUG
-        print("[RtBPopupAd] Initialized with tagGroupId: \(tagGroupId)")
-        #endif
+        Log.info("Initialized with tagGroupId: \(tagGroupId)", context: "RtBPopupAd")
     }
 
     public func load() async throws {
@@ -48,9 +44,7 @@ public class RtBPopupAd: OverlayAd {
             throw RetailBoosterError.userInfoNotSet
         }
 
-        #if DEBUG
-        print("[RtBPopupAd] Loading popup ad for tagGroupId: \(tagGroupId)")
-        #endif
+        Log.info("Loading popup ad for tagGroupId: \(tagGroupId)", context: "RtBPopupAd")
 
         await MainActor.run {
             self.viewModel = AdViewModel(
@@ -67,33 +61,25 @@ public class RtBPopupAd: OverlayAd {
         await viewModel?.fetchAdsWithUIUpdate()
         isLoaded = true
 
-        #if DEBUG
-        print("[RtBPopupAd] Load completed")
-        #endif
+        Log.info("Load completed", context: "RtBPopupAd")
     }
 
     public func show(from viewController: UIViewController? = nil) {
         guard !isUsed else {
-            #if DEBUG
-            print("[RtBPopupAd] Ad already used")
-            #endif
+            Log.info("Ad already used", context: "RtBPopupAd")
             callback.onClose?()
             return
         }
 
         guard isLoaded, let vm = viewModel else {
-            #if DEBUG
-            print("[RtBPopupAd] Ad not loaded")
-            #endif
+            Log.error("Ad not loaded", context: "RtBPopupAd")
             callback.onClose?()
             return
         }
 
         // TODO: Popup広告の表示実装
         // 現在はAdViewModelがPopup広告データを持たないため、一旦callbackのみ実行
-        #if DEBUG
-        print("[RtBPopupAd] Showing popup ad (not yet implemented)")
-        #endif
+        Log.info("Showing popup ad (not yet implemented)", context: "RtBPopupAd")
 
         isUsed = true
         callback.onClose?()

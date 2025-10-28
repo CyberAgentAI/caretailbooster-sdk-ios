@@ -91,11 +91,11 @@ extension SwiftUIWebView {
                         param: viewModel.trackingParam ?? "",
                         adId: viewModel.trackingAdId ?? 0
                     )
-                    
+
                 }
             }
             // Web view finished loading content
-            print("[SwiftUIWebView] web view loaded")
+            Log.debug("web view loaded", context: "SwiftUIWebView")
         }
         
         // `window.open()` のリクエストを Safari で開く

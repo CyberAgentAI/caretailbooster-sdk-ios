@@ -94,9 +94,7 @@ class AdViewModel: ObservableObject {
     }
     
     public func fetchAdsWithUIUpdate() async {
-        #if DEBUG
-        print("[AdViewModel] fetchAdsWithUIUpdate called at \(Date()) for tagGroupId: \(tagGroupId)")
-        #endif
+        Log.debug("fetchAdsWithUIUpdate called at \(Date()) for tagGroupId: \(tagGroupId)", context: "AdViewModel")
         do {
             let body = RewardAdsRequestBody(
                 user: .init(id: userId),
@@ -131,7 +129,7 @@ class AdViewModel: ObservableObject {
                 preloadWebViews()
             }
         } catch {
-            print("[AdViewModel] Error fetching ads: \(error)")
+            Log.error("Error fetching ads: \(error)", context: "AdViewModel")
             NotificationCenter.default.post(name: NSNotification.Alert, object: nil)
         }
     }
@@ -175,17 +173,13 @@ class AdViewModel: ObservableObject {
     
     private func preloadWebViews() {
         guard let adType = adType else {
-            #if DEBUG
-            print("[AdViewModel] No adType set, skipping preload")
-            #endif
+            Log.debug("No adType set, skipping preload", context: "AdViewModel")
             return
         }
-        
+
         switch adType {
         case .REWARD:
-            #if DEBUG
-            print("[AdViewModel] Preloading WebViews for \(rewardAds.count) reward ads")
-            #endif
+            Log.debug("Preloading WebViews for \(rewardAds.count) reward ads", context: "AdViewModel")
             for ad in rewardAds {
                 let vm = BaseWebViewVM(ad: ad, rewardVm: self)
                 let key = "reward_\(ad.ad_id)_\(ad.param)"
@@ -193,11 +187,9 @@ class AdViewModel: ObservableObject {
                 // 非同期でロード開始
                 vm.loadWebPageOnce(webResource: ad.webview_url.contents)
             }
-            
+
         case .BANNER:
-            #if DEBUG
-            print("[AdViewModel] Preloading WebViews for \(bannerAds.count) banner ads")
-            #endif
+            Log.debug("Preloading WebViews for \(bannerAds.count) banner ads", context: "AdViewModel")
             for ad in bannerAds {
                 let vm = BaseWebViewVM(bannerAd: ad)
                 let key = "banner_\(ad.ad_id)_\(ad.param)"
@@ -213,15 +205,11 @@ class AdViewModel: ObservableObject {
     func getOrCreateRewardVM(for ad: Reward) -> BaseWebViewVM {
         let key = "reward_\(ad.ad_id)_\(ad.param)"
         if let cached = webViewVMCache[key] {
-            #if DEBUG
-            print("[AdViewModel] Using cached VM for reward ad \(ad.ad_id)")
-            #endif
+            Log.debug("Using cached VM for reward ad \(ad.ad_id)", context: "AdViewModel")
             return cached
         }
         // フォールバック（キャッシュミス時）
-        #if DEBUG
-        print("[AdViewModel] Cache miss, creating new VM for reward ad \(ad.ad_id)")
-        #endif
+        Log.debug("Cache miss, creating new VM for reward ad \(ad.ad_id)", context: "AdViewModel")
         let vm = BaseWebViewVM(ad: ad, rewardVm: self)
         return vm
     }
@@ -229,15 +217,11 @@ class AdViewModel: ObservableObject {
     func getOrCreateBannerVM(for ad: Banner) -> BaseWebViewVM {
         let key = "banner_\(ad.ad_id)_\(ad.param)"
         if let cached = webViewVMCache[key] {
-            #if DEBUG
-            print("[AdViewModel] Using cached VM for banner ad \(ad.ad_id)")
-            #endif
+            Log.debug("Using cached VM for banner ad \(ad.ad_id)", context: "AdViewModel")
             return cached
         }
         // フォールバック（キャッシュミス時）
-        #if DEBUG
-        print("[AdViewModel] Cache miss, creating new VM for banner ad \(ad.ad_id)")
-        #endif
+        Log.debug("Cache miss, creating new VM for banner ad \(ad.ad_id)", context: "AdViewModel")
         let vm = BaseWebViewVM(bannerAd: ad)
         return vm
     }

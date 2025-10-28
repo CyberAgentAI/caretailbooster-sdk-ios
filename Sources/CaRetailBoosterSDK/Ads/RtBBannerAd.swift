@@ -21,9 +21,7 @@ public class RtBBannerAd: ViewableAd {
 
     public init?(tagGroupId: String, eventName: String? = nil, options: BannerOptions? = nil) {
         guard RetailBooster.isInitialized else {
-            #if DEBUG
-            print("[RtBBannerAd] Error: SDK not initialized")
-            #endif
+            Log.error("Error: SDK not initialized", context: "RtBBannerAd")
             return nil
         }
 
@@ -31,9 +29,7 @@ public class RtBBannerAd: ViewableAd {
         self.eventName = eventName
         self.options = options
 
-        #if DEBUG
-        print("[RtBBannerAd] Initialized with tagGroupId: \(tagGroupId)")
-        #endif
+        Log.info("Initialized with tagGroupId: \(tagGroupId)", context: "RtBBannerAd")
     }
 
     public func load() async throws {
@@ -45,9 +41,7 @@ public class RtBBannerAd: ViewableAd {
             throw RetailBoosterError.userInfoNotSet
         }
 
-        #if DEBUG
-        print("[RtBBannerAd] Loading banner ads for tagGroupId: \(tagGroupId)")
-        #endif
+        Log.info("Loading banner ads for tagGroupId: \(tagGroupId)", context: "RtBBannerAd")
 
         await MainActor.run {
             self.viewModel = AdViewModel(
@@ -63,10 +57,8 @@ public class RtBBannerAd: ViewableAd {
         await viewModel?.fetchAdsWithUIUpdate()
         isLoaded = true
 
-        #if DEBUG
         let adCount = viewModel?.bannerAds.count ?? 0
-        print("[RtBBannerAd] Loaded \(adCount) banner ads")
-        #endif
+        Log.info("Loaded \(adCount) banner ads", context: "RtBBannerAd")
     }
 
     public var views: [AnyView] {
