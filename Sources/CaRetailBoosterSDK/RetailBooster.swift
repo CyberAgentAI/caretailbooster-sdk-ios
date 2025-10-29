@@ -5,7 +5,7 @@ import Foundation
 public class RetailBooster {
     private static var config: RetailBoosterConfig?
     private static var isInit: Bool = false
-    nonisolated(unsafe) internal static var logLevel: LogLevel = .none
+    internal static var logLevel: LogLevel = .none
 
     public static func initialize(mediaId: String, mode: RunMode) {
         config = RetailBoosterConfig(
@@ -86,10 +86,6 @@ public class RetailBooster {
             print("[RetailBooster][INFO] Log level set to: \(level)")
         }
         #endif
-    }
-
-    nonisolated(unsafe) internal static func getLogLevel() -> LogLevel {
-        return logLevel
     }
 
     internal static var currentConfig: RetailBoosterConfig? {
