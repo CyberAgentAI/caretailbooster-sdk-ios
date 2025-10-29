@@ -54,6 +54,9 @@ public class RtBBannerAd: ViewableAd {
 
         let adCount = viewModel?.bannerAds.count ?? 0
         Log.info("Loaded \(adCount) banner ads", context: "RtBBannerAd")
+        let areaName = viewModel?.areaName
+        let areaDescription = viewModel?.areaDescription
+        Log.info("Area name: \(areaName ?? ""), Area description: \(areaDescription ?? "")", context: "RtBBannerAd")
     }
 
     public var views: [AnyView] {

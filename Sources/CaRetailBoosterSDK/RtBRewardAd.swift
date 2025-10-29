@@ -65,6 +65,9 @@ public class RtBRewardAd: ViewableAd {
 
         let adCount = viewModel?.rewardAds.count ?? 0
         Log.info("Loaded \(adCount) reward ads", context: "RtBRewardAd")
+        let areaName = viewModel?.areaName
+        let areaDescription = viewModel?.areaDescription
+        Log.info("Area name: \(areaName ?? ""), Area description: \(areaDescription ?? "")", context: "RtBRewardAd")
     }
 
     public var views: [AnyView] {
