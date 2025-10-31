@@ -159,7 +159,7 @@ struct BannerAdExampleView: View {
         let ad = RtBBannerAd(
             tagGroupId: "your_tag_group_id",
             eventName: "banner_example",
-            options: BannerOptions(size: SizeOption(width: 360, height: 120))
+            options: RtBBannerOptions(size: RtBSizeOption(width: 360, height: 120))
         )
 
         Task {
@@ -235,8 +235,8 @@ struct RewardAdExampleView: View {
         let ad = RtBRewardAd(
             tagGroupId: "your_tag_group_id",
             eventName: "reward_example",
-            options: RewardOptions(
-                size: SizeOption(width: 180, height: 270)
+            options: RtBRewardOptions(
+                size: RtBSizeOption(width: 180, height: 270)
             )
         ) { callback in
             callback.onMarkSucceeded = {
