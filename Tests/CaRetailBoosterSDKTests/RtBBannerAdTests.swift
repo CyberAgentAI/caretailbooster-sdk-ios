@@ -15,12 +15,13 @@ final class RtBBannerAdTests: XCTestCase {
 
     // MARK: - init tests
 
-    func testInit_failsWhenSDKNotInitialized() {
+    func testInit_succeededEvenWhenSDKNotInitialized() {
         // When
         let bannerAd = RtBBannerAd(tagGroupId: "tag1")
 
         // Then
-        XCTAssertNil(bannerAd)
+        XCTAssertNotNil(bannerAd)
+        XCTAssertEqual(bannerAd.tagGroupId, "tag1")
     }
 
     func testInit_succeedsWhenSDKInitialized() {
@@ -32,7 +33,7 @@ final class RtBBannerAdTests: XCTestCase {
 
         // Then
         XCTAssertNotNil(bannerAd)
-        XCTAssertEqual(bannerAd?.tagGroupId, "tag1")
+        XCTAssertEqual(bannerAd.tagGroupId, "tag1")
     }
 
     func testInit_withEventNameAndOptions() {
@@ -49,9 +50,9 @@ final class RtBBannerAdTests: XCTestCase {
 
         // Then
         XCTAssertNotNil(bannerAd)
-        XCTAssertEqual(bannerAd?.tagGroupId, "tag1")
-        XCTAssertEqual(bannerAd?.eventName, "test_event")
-        XCTAssertNotNil(bannerAd?.options)
+        XCTAssertEqual(bannerAd.tagGroupId, "tag1")
+        XCTAssertEqual(bannerAd.eventName, "test_event")
+        XCTAssertNotNil(bannerAd.options)
     }
 
     // MARK: - load tests
@@ -63,7 +64,7 @@ final class RtBBannerAdTests: XCTestCase {
 
         // When/Then
         do {
-            try await bannerAd?.load()
+            try await bannerAd.load()
             XCTFail("Expected error to be thrown")
         } catch {
             XCTAssertTrue(error is RetailBoosterError)
@@ -78,7 +79,7 @@ final class RtBBannerAdTests: XCTestCase {
         let bannerAd = RtBBannerAd(tagGroupId: "tag1")
 
         // When
-        let views = bannerAd?.views ?? []
+        let views = bannerAd.views
 
         // Then
         XCTAssertTrue(views.isEmpty)
@@ -92,7 +93,7 @@ final class RtBBannerAdTests: XCTestCase {
         let bannerAd = RtBBannerAd(tagGroupId: "tag1")
 
         // When
-        let areaName = bannerAd?.areaName
+        let areaName = bannerAd.areaName
 
         // Then
         XCTAssertNil(areaName)
@@ -104,7 +105,7 @@ final class RtBBannerAdTests: XCTestCase {
         let bannerAd = RtBBannerAd(tagGroupId: "tag1")
 
         // When
-        let areaDescription = bannerAd?.areaDescription
+        let areaDescription = bannerAd.areaDescription
 
         // Then
         XCTAssertNil(areaDescription)

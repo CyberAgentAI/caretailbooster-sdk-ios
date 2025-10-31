@@ -15,12 +15,13 @@ final class RtBPopupAdTests: XCTestCase {
 
     // MARK: - init tests
 
-    func testInit_failsWhenSDKNotInitialized() {
+    func testInit_succeededEvenWhenSDKNotInitialized() {
         // When
         let popupAd = RtBPopupAd(tagGroupId: "tag1")
 
         // Then
-        XCTAssertNil(popupAd)
+        XCTAssertNotNil(popupAd)
+        XCTAssertEqual(popupAd.tagGroupId, "tag1")
     }
 
     func testInit_succeedsWhenSDKInitialized() {
@@ -32,7 +33,7 @@ final class RtBPopupAdTests: XCTestCase {
 
         // Then
         XCTAssertNotNil(popupAd)
-        XCTAssertEqual(popupAd?.tagGroupId, "tag1")
+        XCTAssertEqual(popupAd.tagGroupId, "tag1")
     }
 
     func testInit_withEventNameAndOptions() {
@@ -49,9 +50,9 @@ final class RtBPopupAdTests: XCTestCase {
 
         // Then
         XCTAssertNotNil(popupAd)
-        XCTAssertEqual(popupAd?.tagGroupId, "tag1")
-        XCTAssertEqual(popupAd?.eventName, "test_event")
-        XCTAssertNotNil(popupAd?.options)
+        XCTAssertEqual(popupAd.tagGroupId, "tag1")
+        XCTAssertEqual(popupAd.eventName, "test_event")
+        XCTAssertNotNil(popupAd.options)
     }
 
     // MARK: - callback tests
@@ -92,7 +93,7 @@ final class RtBPopupAdTests: XCTestCase {
 
         // When/Then
         do {
-            try await popupAd?.load()
+            try await popupAd.load()
             XCTFail("Expected error to be thrown")
         } catch {
             XCTAssertTrue(error is RetailBoosterError)
@@ -112,7 +113,7 @@ final class RtBPopupAdTests: XCTestCase {
         }
 
         // When
-        popupAd?.show()
+        popupAd.show()
 
         // Then
         XCTAssertTrue(closeCalled)
@@ -132,9 +133,9 @@ final class RtBPopupAdTests: XCTestCase {
         }
 
         // When - first call
-        popupAd?.show()
+        popupAd.show()
         // When - second call
-        popupAd?.show()
+        popupAd.show()
 
         // Then - onClose should be called twice (once per show)
         XCTAssertEqual(closeCallCount, 2)

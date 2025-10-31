@@ -15,12 +15,13 @@ final class RtBRewardAdTests: XCTestCase {
 
     // MARK: - init tests
 
-    func testInit_failsWhenSDKNotInitialized() {
+    func testInit_succeededEvenWhenSDKNotInitialized() {
         // When
         let rewardAd = RtBRewardAd(tagGroupId: "tag1")
 
         // Then
-        XCTAssertNil(rewardAd)
+        XCTAssertNotNil(rewardAd)
+        XCTAssertEqual(rewardAd.tagGroupId, "tag1")
     }
 
     func testInit_succeedsWhenSDKInitialized() {
@@ -32,17 +33,14 @@ final class RtBRewardAdTests: XCTestCase {
 
         // Then
         XCTAssertNotNil(rewardAd)
-        XCTAssertEqual(rewardAd?.tagGroupId, "tag1")
+        XCTAssertEqual(rewardAd.tagGroupId, "tag1")
     }
 
     func testInit_withEventNameAndOptions() {
         // Given
         RetailBooster.initialize(mediaId: "media1", mode: .dev)
         let options = RewardOptions(
-            size: SizeOption(width: 173, height: 210),
-            itemSpacing: 16,
-            leadingMargin: 16,
-            trailingMargin: 16
+            size: SizeOption(width: 173, height: 210)
         )
 
         // When
@@ -54,9 +52,9 @@ final class RtBRewardAdTests: XCTestCase {
 
         // Then
         XCTAssertNotNil(rewardAd)
-        XCTAssertEqual(rewardAd?.tagGroupId, "tag1")
-        XCTAssertEqual(rewardAd?.eventName, "test_event")
-        XCTAssertNotNil(rewardAd?.options)
+        XCTAssertEqual(rewardAd.tagGroupId, "tag1")
+        XCTAssertEqual(rewardAd.eventName, "test_event")
+        XCTAssertNotNil(rewardAd.options)
     }
 
     // MARK: - callback tests
@@ -92,7 +90,7 @@ final class RtBRewardAdTests: XCTestCase {
 
         // When/Then
         do {
-            try await rewardAd?.load()
+            try await rewardAd.load()
             XCTFail("Expected error to be thrown")
         } catch {
             XCTAssertTrue(error is RetailBoosterError)
@@ -107,7 +105,7 @@ final class RtBRewardAdTests: XCTestCase {
         let rewardAd = RtBRewardAd(tagGroupId: "tag1")
 
         // When
-        let views = rewardAd?.views ?? []
+        let views = rewardAd.views
 
         // Then
         XCTAssertTrue(views.isEmpty)
@@ -121,7 +119,7 @@ final class RtBRewardAdTests: XCTestCase {
         let rewardAd = RtBRewardAd(tagGroupId: "tag1")
 
         // When
-        let areaName = rewardAd?.areaName
+        let areaName = rewardAd.areaName
 
         // Then
         XCTAssertNil(areaName)
@@ -133,7 +131,7 @@ final class RtBRewardAdTests: XCTestCase {
         let rewardAd = RtBRewardAd(tagGroupId: "tag1")
 
         // When
-        let areaDescription = rewardAd?.areaDescription
+        let areaDescription = rewardAd.areaDescription
 
         // Then
         XCTAssertNil(areaDescription)
