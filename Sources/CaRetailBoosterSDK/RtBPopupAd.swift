@@ -48,6 +48,7 @@ public class RtBPopupAd: OverlayAd {
                 crypto: crypto,
                 tagGroupId: tagGroupId,
                 runMode: config.mode,
+                eventName: self.eventName,
                 popupCallback: self.callback,
                 popupOptions: self.options
             )

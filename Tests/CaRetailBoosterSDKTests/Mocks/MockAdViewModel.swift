@@ -12,6 +12,7 @@ extension AdViewModel {
             crypto: "mock_crypto",
             tagGroupId: "mock_tag_group",
             runMode: .dev,
+            eventName: nil,
             bannerOptions: nil
         )
 

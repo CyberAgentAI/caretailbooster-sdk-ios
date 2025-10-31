@@ -55,6 +55,7 @@ public class RtBRewardAd: ViewableAd {
                 crypto: crypto,
                 tagGroupId: tagGroupId,
                 runMode: config.mode,
+                eventName: self.eventName,
                 rewardCallback: self.callback,
                 rewardOptions: self.options
             )

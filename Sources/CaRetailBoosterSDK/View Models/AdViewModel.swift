@@ -37,6 +37,7 @@ class AdViewModel: ObservableObject {
     let crypto: String
     let tagGroupId: String
     let runMode: RunMode
+    let eventName: String?
 
     // Banner広告用 init
     public init(
@@ -45,6 +46,7 @@ class AdViewModel: ObservableObject {
         crypto: String,
         tagGroupId: String,
         runMode: RunMode,
+        eventName: String? = nil,
         bannerOptions: BannerOptions? = nil
     ) {
         self.mediaId = mediaId
@@ -52,6 +54,7 @@ class AdViewModel: ObservableObject {
         self.crypto = crypto
         self.tagGroupId = tagGroupId
         self.runMode = runMode
+        self.eventName = eventName
         self.bannerOptions = bannerOptions
     }
 
@@ -62,6 +65,7 @@ class AdViewModel: ObservableObject {
         crypto: String,
         tagGroupId: String,
         runMode: RunMode,
+        eventName: String? = nil,
         rewardCallback: RewardCallback? = nil,
         rewardOptions: RewardOptions? = nil
     ) {
@@ -70,17 +74,19 @@ class AdViewModel: ObservableObject {
         self.crypto = crypto
         self.tagGroupId = tagGroupId
         self.runMode = runMode
+        self.eventName = eventName
         self.rewardCallback = rewardCallback
         self.rewardOptions = rewardOptions
     }
 
-    // Popup広告用 init（将来の実装のため）
+    // Popup広告用 init
     public init(
         mediaId: String,
         userId: String,
         crypto: String,
         tagGroupId: String,
         runMode: RunMode,
+        eventName: String? = nil,
         popupCallback: PopupCallback? = nil,
         popupOptions: PopupOptions? = nil
     ) {
@@ -89,6 +95,7 @@ class AdViewModel: ObservableObject {
         self.crypto = crypto
         self.tagGroupId = tagGroupId
         self.runMode = runMode
+        self.eventName = eventName
         self.popupCallback = popupCallback
         self.popupOptions = popupOptions
     }

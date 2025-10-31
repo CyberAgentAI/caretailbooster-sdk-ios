@@ -45,6 +45,7 @@ public class RtBBannerAd: ViewableAd {
                 crypto: crypto,
                 tagGroupId: tagGroupId,
                 runMode: config.mode,
+                eventName: self.eventName,
                 bannerOptions: self.options
             )
         }
