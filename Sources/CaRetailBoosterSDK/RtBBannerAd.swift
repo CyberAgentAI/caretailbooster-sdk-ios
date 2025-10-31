@@ -65,8 +65,14 @@ public class RtBBannerAd: ViewableAd {
             return []
         }
 
-        return vm.bannerAds.map { ad in
-            AnyView(BannerAd(ad: ad).environmentObject(vm))
+        return vm.bannerAds.compactMap { ad in
+            let webViewVM = vm.getOrCreateBannerVM(for: ad)
+            // エラーが発生したWebViewは除外
+            guard !webViewVM.hasError else {
+                Log.debug("Excluding banner ad \(ad.ad_id) due to WebView error", context: "RtBBannerAd")
+                return nil
+            }
+            return AnyView(BannerAd(ad: ad).environmentObject(vm))
         }
     }
 

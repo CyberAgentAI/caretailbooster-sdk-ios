@@ -48,6 +48,9 @@ class BaseWebViewVM: ObservableObject {
     // WebViewロード済みフラグ（onAppear多重実行防止）
     private var isLoaded: Bool = false
 
+    // WebViewエラーフラグ（エラーが発生した広告を除外するため）
+    var hasError: Bool = false
+
     // init for banner
     init(bannerAd: Banner) {
         self.bannerAd = bannerAd

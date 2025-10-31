@@ -76,8 +76,14 @@ public class RtBRewardAd: ViewableAd {
             return []
         }
 
-        return vm.rewardAds.map { ad in
-            AnyView(
+        return vm.rewardAds.compactMap { ad in
+            let webViewVM = vm.getOrCreateRewardVM(for: ad)
+            // エラーが発生したWebViewは除外
+            guard !webViewVM.hasError else {
+                Log.debug("Excluding reward ad \(ad.ad_id) due to WebView error", context: "RtBRewardAd")
+                return nil
+            }
+            return AnyView(
                 RewardAd(ad: ad)
                     .environmentObject(vm)
                     .id("reward_\(ad.index)_\(vm.forceRefreshToken)")

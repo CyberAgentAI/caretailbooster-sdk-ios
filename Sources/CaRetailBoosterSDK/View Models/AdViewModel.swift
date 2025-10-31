@@ -218,9 +218,10 @@ class AdViewModel: ObservableObject {
         // フォールバック（キャッシュミス時）
         Log.debug("Cache miss, creating new VM for reward ad \(ad.ad_id)", context: "AdViewModel")
         let vm = BaseWebViewVM(ad: ad, rewardVm: self)
+        webViewVMCache[key] = vm
         return vm
     }
-    
+
     func getOrCreateBannerVM(for ad: Banner) -> BaseWebViewVM {
         let key = "banner_\(ad.ad_id)_\(ad.param)"
         if let cached = webViewVMCache[key] {
@@ -230,6 +231,7 @@ class AdViewModel: ObservableObject {
         // フォールバック（キャッシュミス時）
         Log.debug("Cache miss, creating new VM for banner ad \(ad.ad_id)", context: "AdViewModel")
         let vm = BaseWebViewVM(bannerAd: ad)
+        webViewVMCache[key] = vm
         return vm
     }
 }

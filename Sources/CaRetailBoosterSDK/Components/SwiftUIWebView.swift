@@ -97,6 +97,26 @@ extension SwiftUIWebView {
             // Web view finished loading content
             Log.debug("web view loaded", context: "SwiftUIWebView")
         }
+
+        // WebViewの読み込みエラーをハンドリング
+        func webView(
+            _ webView: WKWebView,
+            didFail navigation: WKNavigation!,
+            withError error: Error
+        ) {
+            viewModel.hasError = true
+            Log.error("WebView load failed: \(error.localizedDescription)", context: "SwiftUIWebView")
+        }
+
+        // WebViewの仮読み込みエラーをハンドリング
+        func webView(
+            _ webView: WKWebView,
+            didFailProvisionalNavigation navigation: WKNavigation!,
+            withError error: Error
+        ) {
+            viewModel.hasError = true
+            Log.error("WebView provisional load failed: \(error.localizedDescription)", context: "SwiftUIWebView")
+        }
         
         // `window.open()` のリクエストを Safari で開く
         func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {

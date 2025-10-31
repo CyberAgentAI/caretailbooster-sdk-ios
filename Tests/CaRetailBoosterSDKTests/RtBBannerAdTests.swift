@@ -155,4 +155,54 @@ final class RtBBannerAdTests: XCTestCase {
         // Then
         XCTAssertTrue(views.isEmpty)
     }
+
+    // MARK: - Error filtering tests
+
+    func testViewsWithError_excludesErrorAds() {
+        // Given
+        let mockViewModel = AdViewModel(mockResponse: MockData.bannerResponse)
+        let bannerAd = RtBBannerAd(
+            tagGroupId: "test_tag",
+            mockViewModel: mockViewModel
+        )
+
+        // When: Mark first banner ad as having an error
+        mockViewModel.markBannerAdAsError(adId: 2001)
+        let views = bannerAd.views
+
+        // Then: Only one view should be returned (the second banner without error)
+        XCTAssertEqual(views.count, 1)
+    }
+
+    func testViewsWithError_excludesAllErrorAds() {
+        // Given
+        let mockViewModel = AdViewModel(mockResponse: MockData.bannerResponse)
+        let bannerAd = RtBBannerAd(
+            tagGroupId: "test_tag",
+            mockViewModel: mockViewModel
+        )
+
+        // When: Mark all banner ads as having errors
+        mockViewModel.markBannerAdAsError(adId: 2001)
+        mockViewModel.markBannerAdAsError(adId: 2002)
+        let views = bannerAd.views
+
+        // Then: No views should be returned
+        XCTAssertTrue(views.isEmpty)
+    }
+
+    func testViewsWithError_returnsAllWhenNoErrors() {
+        // Given
+        let mockViewModel = AdViewModel(mockResponse: MockData.bannerResponse)
+        let bannerAd = RtBBannerAd(
+            tagGroupId: "test_tag",
+            mockViewModel: mockViewModel
+        )
+
+        // When: No errors are marked
+        let views = bannerAd.views
+
+        // Then: All views should be returned
+        XCTAssertEqual(views.count, 2)
+    }
 }

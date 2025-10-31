@@ -181,4 +181,72 @@ final class RtBRewardAdTests: XCTestCase {
         // Then
         XCTAssertTrue(views.isEmpty)
     }
+
+    // MARK: - Error filtering tests
+
+    func testViewsWithError_excludesErrorAds() {
+        // Given
+        let mockViewModel = AdViewModel(mockResponse: MockData.rewardResponse)
+        let rewardAd = RtBRewardAd(
+            tagGroupId: "test_tag",
+            mockViewModel: mockViewModel
+        )
+
+        // When: Mark first reward ad as having an error
+        mockViewModel.markRewardAdAsError(adId: 1001)
+        let views = rewardAd.views
+
+        // Then: Only two views should be returned (excluding the first ad with error)
+        XCTAssertEqual(views.count, 2)
+    }
+
+    func testViewsWithError_excludesMultipleErrorAds() {
+        // Given
+        let mockViewModel = AdViewModel(mockResponse: MockData.rewardResponse)
+        let rewardAd = RtBRewardAd(
+            tagGroupId: "test_tag",
+            mockViewModel: mockViewModel
+        )
+
+        // When: Mark first two reward ads as having errors
+        mockViewModel.markRewardAdAsError(adId: 1001)
+        mockViewModel.markRewardAdAsError(adId: 1002)
+        let views = rewardAd.views
+
+        // Then: Only one view should be returned
+        XCTAssertEqual(views.count, 1)
+    }
+
+    func testViewsWithError_excludesAllErrorAds() {
+        // Given
+        let mockViewModel = AdViewModel(mockResponse: MockData.rewardResponse)
+        let rewardAd = RtBRewardAd(
+            tagGroupId: "test_tag",
+            mockViewModel: mockViewModel
+        )
+
+        // When: Mark all reward ads as having errors
+        mockViewModel.markRewardAdAsError(adId: 1001)
+        mockViewModel.markRewardAdAsError(adId: 1002)
+        mockViewModel.markRewardAdAsError(adId: 1003)
+        let views = rewardAd.views
+
+        // Then: No views should be returned
+        XCTAssertTrue(views.isEmpty)
+    }
+
+    func testViewsWithError_returnsAllWhenNoErrors() {
+        // Given
+        let mockViewModel = AdViewModel(mockResponse: MockData.rewardResponse)
+        let rewardAd = RtBRewardAd(
+            tagGroupId: "test_tag",
+            mockViewModel: mockViewModel
+        )
+
+        // When: No errors are marked
+        let views = rewardAd.views
+
+        // Then: All views should be returned
+        XCTAssertEqual(views.count, 3)
+    }
 }

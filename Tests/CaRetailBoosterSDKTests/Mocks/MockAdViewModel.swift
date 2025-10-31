@@ -23,4 +23,18 @@ extension AdViewModel {
         self.areaName = mockResponse.tagGroup?.areaName
         self.areaDescription = mockResponse.tagGroup?.areaDescription
     }
+
+    /// Test helper: Mark specific banner ad as having an error
+    func markBannerAdAsError(adId: Int) {
+        guard let ad = bannerAds.first(where: { $0.ad_id == adId }) else { return }
+        let vm = getOrCreateBannerVM(for: ad)
+        vm.hasError = true
+    }
+
+    /// Test helper: Mark specific reward ad as having an error
+    func markRewardAdAsError(adId: Int) {
+        guard let ad = rewardAds.first(where: { $0.ad_id == adId }) else { return }
+        let vm = getOrCreateRewardVM(for: ad)
+        vm.hasError = true
+    }
 }
