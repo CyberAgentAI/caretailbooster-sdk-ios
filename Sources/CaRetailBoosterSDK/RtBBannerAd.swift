@@ -6,7 +6,7 @@ import SwiftUI
 public class RtBBannerAd: ViewableAd {
     public let tagGroupId: String
     public let eventName: String?
-    public let options: BannerOptions?
+    public let options: RtBBannerOptions?
 
     public var areaName: String? {
         viewModel?.areaName
@@ -19,7 +19,7 @@ public class RtBBannerAd: ViewableAd {
     private var viewModel: AdViewModel?
     private var isLoaded: Bool = false
 
-    public init(tagGroupId: String, eventName: String? = nil, options: BannerOptions? = nil) {
+    public init(tagGroupId: String, eventName: String? = nil, options: RtBBannerOptions? = nil) {
         self.tagGroupId = tagGroupId
         self.eventName = eventName
         self.options = options
@@ -29,11 +29,11 @@ public class RtBBannerAd: ViewableAd {
 
     public func load() async throws {
         guard let config = RetailBooster.currentConfig else {
-            throw RetailBoosterError.notInitialized
+            throw RtBError.notInitialized
         }
 
         guard let userId = config.userId, let crypto = config.crypto else {
-            throw RetailBoosterError.userInfoNotSet
+            throw RtBError.userInfoNotSet
         }
 
         Log.info("Loading banner ads for tagGroupId: \(tagGroupId)", context: "RtBBannerAd")
@@ -85,7 +85,7 @@ public class RtBBannerAd: ViewableAd {
 
     // Test init - inject mock ViewModel
     #if DEBUG
-    internal init(tagGroupId: String, eventName: String? = nil, options: BannerOptions? = nil, mockViewModel: AdViewModel) {
+    internal init(tagGroupId: String, eventName: String? = nil, options: RtBBannerOptions? = nil, mockViewModel: AdViewModel) {
         self.tagGroupId = tagGroupId
         self.eventName = eventName
         self.options = options

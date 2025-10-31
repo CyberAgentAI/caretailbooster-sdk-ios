@@ -1,6 +1,6 @@
 import Foundation
 
-public enum RetailBoosterError: Error {
+public enum RtBError: Error {
     case notInitialized
     case userInfoNotSet
     case loadFailed(Error)
@@ -17,7 +17,7 @@ public enum RetailBoosterError: Error {
     }
 }
 
-public enum LogLevel {
+public enum RtBLogLevel {
     case none
     case info
     case debug

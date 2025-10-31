@@ -3,12 +3,12 @@ import Foundation
 @available(iOS 13.0, *)
 @MainActor
 public class RetailBooster {
-    private static var config: RetailBoosterConfig?
+    private static var config: RtBConfig?
     private static var isInit: Bool = false
-    internal static var logLevel: LogLevel = .none
+    internal static var logLevel: RtBLogLevel = .none
 
-    public static func initialize(mediaId: String, mode: RunMode) {
-        config = RetailBoosterConfig(
+    public static func initialize(mediaId: String, mode: RtBRunMode) {
+        config = RtBConfig(
             mediaId: mediaId,
             mode: mode
         )
@@ -25,7 +25,7 @@ public class RetailBooster {
     @MainActor
     public static func load<T: Ad>(
         _ ad: T,
-        completion: @escaping (Result<Bool, RetailBoosterError>) -> Void
+        completion: @escaping (Result<Bool, RtBError>) -> Void
     ) {
         guard isInit else {
             Log.error("Error: SDK not initialized", context: "RetailBooster")
@@ -78,7 +78,7 @@ public class RetailBooster {
         return config.userId != nil && config.crypto != nil
     }
 
-    public static func setLogLevel(_ level: LogLevel) {
+    public static func setLogLevel(_ level: RtBLogLevel) {
         logLevel = level
 
         #if DEBUG
@@ -88,7 +88,7 @@ public class RetailBooster {
         #endif
     }
 
-    internal static var currentConfig: RetailBoosterConfig? {
+    internal static var currentConfig: RtBConfig? {
         return config
     }
 
@@ -103,9 +103,9 @@ public class RetailBooster {
     #endif
 }
 
-internal struct RetailBoosterConfig {
+internal struct RtBConfig {
     let mediaId: String
-    let mode: RunMode
+    let mode: RtBRunMode
     var userId: String?
     var crypto: String?
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-public struct RewardCallback {
+public struct RtBRewardCallback {
     public var onMarkSucceeded: (() -> Void)?
     public var onRewardModalClosed: (() -> Void)?
 
@@ -13,7 +13,7 @@ public struct RewardCallback {
     }
 }
 
-public struct PopupCallback {
+public struct RtBPopupCallback {
     public var onClose: (() -> Void)?
     public var onOuterLink: ((String) -> Void)?
     public var onInnerLink: ((String) -> Void)?

@@ -17,11 +17,11 @@ class AdViewModel: ObservableObject {
 
     @Published var activeModal: ModalType = .none
     @Published var currentAd: Reward?
-    @Published public var rewardCallback: RewardCallback?
-    @Published public var popupCallback: PopupCallback?
-    @Published public var bannerOptions: BannerOptions?
-    @Published public var rewardOptions: RewardOptions?
-    @Published public var popupOptions: PopupOptions?
+    @Published public var rewardCallback: RtBRewardCallback?
+    @Published public var popupCallback: RtBPopupCallback?
+    @Published public var bannerOptions: RtBBannerOptions?
+    @Published public var rewardOptions: RtBRewardOptions?
+    @Published public var popupOptions: RtBPopupOptions?
     
     // 強制リフレッシュ用プロパティ
     @Published public var forceRefreshToken = UUID()
@@ -36,7 +36,7 @@ class AdViewModel: ObservableObject {
     let userId: String
     let crypto: String
     let tagGroupId: String
-    let runMode: RunMode
+    let runMode: RtBRunMode
     let eventName: String?
 
     // Banner広告用 init
@@ -45,9 +45,9 @@ class AdViewModel: ObservableObject {
         userId: String,
         crypto: String,
         tagGroupId: String,
-        runMode: RunMode,
+        runMode: RtBRunMode,
         eventName: String? = nil,
-        bannerOptions: BannerOptions? = nil
+        bannerOptions: RtBBannerOptions? = nil
     ) {
         self.mediaId = mediaId
         self.userId = userId
@@ -64,10 +64,10 @@ class AdViewModel: ObservableObject {
         userId: String,
         crypto: String,
         tagGroupId: String,
-        runMode: RunMode,
+        runMode: RtBRunMode,
         eventName: String? = nil,
-        rewardCallback: RewardCallback? = nil,
-        rewardOptions: RewardOptions? = nil
+        rewardCallback: RtBRewardCallback? = nil,
+        rewardOptions: RtBRewardOptions? = nil
     ) {
         self.mediaId = mediaId
         self.userId = userId
@@ -85,10 +85,10 @@ class AdViewModel: ObservableObject {
         userId: String,
         crypto: String,
         tagGroupId: String,
-        runMode: RunMode,
+        runMode: RtBRunMode,
         eventName: String? = nil,
-        popupCallback: PopupCallback? = nil,
-        popupOptions: PopupOptions? = nil
+        popupCallback: RtBPopupCallback? = nil,
+        popupOptions: RtBPopupOptions? = nil
     ) {
         self.mediaId = mediaId
         self.userId = userId

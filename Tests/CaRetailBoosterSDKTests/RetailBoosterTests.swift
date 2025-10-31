@@ -19,7 +19,7 @@ final class RetailBoosterTests: XCTestCase {
     func testInitialize_setsConfiguration() {
         // Given
         let mediaId = "test-media-id"
-        let mode = RunMode.dev
+        let mode = RtBRunMode.dev
 
         // When
         RetailBooster.initialize(mediaId: mediaId, mode: mode)

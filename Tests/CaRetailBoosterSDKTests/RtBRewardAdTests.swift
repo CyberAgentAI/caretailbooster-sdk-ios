@@ -39,8 +39,8 @@ final class RtBRewardAdTests: XCTestCase {
     func testInit_withEventNameAndOptions() {
         // Given
         RetailBooster.initialize(mediaId: "media1", mode: .dev)
-        let options = RewardOptions(
-            size: SizeOption(width: 173, height: 210)
+        let options = RtBRewardOptions(
+            size: RtBSizeOption(width: 173, height: 210)
         )
 
         // When

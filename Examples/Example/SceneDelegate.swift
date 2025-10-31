@@ -10,7 +10,7 @@ struct Constants {
     static let mediaId = "media1"
     static let userId = "user1"
     static let crypto = "crypto1"
-    static let mode = RunMode.local
+    static let mode = RtBRunMode.local
 
     // Tag Group IDs
     static let bannerTagGroupId = "banner1"
@@ -118,7 +118,7 @@ struct BannerAdExampleView: View {
         let ad = RtBBannerAd(
             tagGroupId: Constants.bannerTagGroupId,
             eventName: "banner_example",
-            options: BannerOptions(size: SizeOption(width: 360, height: 120))
+            options: RtBBannerOptions(size: RtBSizeOption(width: 360, height: 120))
         )
 
         Task {
@@ -208,8 +208,8 @@ struct RewardAdExampleView: View {
         let ad = RtBRewardAd(
             tagGroupId: Constants.rewardTagGroupId,
             eventName: "reward_example",
-            options: RewardOptions(
-                size: SizeOption(width: 180, height: 270)
+            options: RtBRewardOptions(
+                size: RtBSizeOption(width: 180, height: 270)
             )
         ) { callback in
             callback.onMarkSucceeded = {

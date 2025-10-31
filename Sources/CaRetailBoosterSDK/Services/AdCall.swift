@@ -136,17 +136,17 @@ typealias RewardAdsRequestBody = AdsRequest
 
 @MainActor
 @available(iOS 13.0, *)
-func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws -> GetRewardResponse {
+func getAds(runMode: RtBRunMode, body: RewardAdsRequestBody) async throws -> GetRewardResponse {
     Log.debug("API Call: getAds called at \(Date()) for tagGroupId: \(body.tagInfo.tagGroupId)", context: "AdCall")
     let url: String
     switch runMode {
-    case RunMode.dev:
+    case RtBRunMode.dev:
         url = Const.DEV_AD_SERVER_URL
-    case RunMode.stg:
+    case RtBRunMode.stg:
         url = Const.STG_AD_SERVER_URL
-    case RunMode.prd:
+    case RtBRunMode.prd:
         url = Const.PRD_AD_SERVER_URL
-    case RunMode.mock:
+    case RtBRunMode.mock:
         url = Const.MOCK_AD_SERVER_URL
     default:
         url = Const.LOCAL_AD_SERVER_URL

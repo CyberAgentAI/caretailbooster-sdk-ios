@@ -39,7 +39,7 @@ final class RtBBannerAdTests: XCTestCase {
     func testInit_withEventNameAndOptions() {
         // Given
         RetailBooster.initialize(mediaId: "media1", mode: .dev)
-        let options = BannerOptions(size: SizeOption(width: 320, height: 50))
+        let options = RtBBannerOptions(size: RtBSizeOption(width: 320, height: 50))
 
         // When
         let bannerAd = RtBBannerAd(

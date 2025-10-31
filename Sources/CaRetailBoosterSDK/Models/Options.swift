@@ -1,7 +1,7 @@
 import Foundation
 import CoreGraphics
 
-public struct SizeOption {
+public struct RtBSizeOption {
     public let width: CGFloat?
     public let height: CGFloat?
 
@@ -11,22 +11,22 @@ public struct SizeOption {
     }
 }
 
-public struct BannerOptions {
-    public let size: SizeOption?
+public struct RtBBannerOptions {
+    public let size: RtBSizeOption?
 
-    public init(size: SizeOption? = nil) {
+    public init(size: RtBSizeOption? = nil) {
         self.size = size
     }
 }
 
-public struct RewardOptions {
-    public let size: SizeOption?
+public struct RtBRewardOptions {
+    public let size: RtBSizeOption?
 
-    public init(size: SizeOption? = nil) {
+    public init(size: RtBSizeOption? = nil) {
         self.size = size
     }
 }
 
-public struct PopupOptions {
+public struct RtBPopupOptions {
     public init() {}
 }

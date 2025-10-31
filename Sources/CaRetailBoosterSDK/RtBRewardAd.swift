@@ -6,8 +6,8 @@ import SwiftUI
 public class RtBRewardAd: ViewableAd {
     public let tagGroupId: String
     public let eventName: String?
-    public let options: RewardOptions?
-    private var callback: RewardCallback
+    public let options: RtBRewardOptions?
+    private var callback: RtBRewardCallback
 
     public var areaName: String? {
         viewModel?.areaName
@@ -23,14 +23,14 @@ public class RtBRewardAd: ViewableAd {
     public init(
         tagGroupId: String,
         eventName: String? = nil,
-        options: RewardOptions? = nil,
-        configureCallback: ((inout RewardCallback) -> Void)? = nil
+        options: RtBRewardOptions? = nil,
+        configureCallback: ((inout RtBRewardCallback) -> Void)? = nil
     ) {
         self.tagGroupId = tagGroupId
         self.eventName = eventName
         self.options = options
 
-        var callback = RewardCallback()
+        var callback = RtBRewardCallback()
         configureCallback?(&callback)
         self.callback = callback
 
@@ -39,11 +39,11 @@ public class RtBRewardAd: ViewableAd {
 
     public func load() async throws {
         guard let config = RetailBooster.currentConfig else {
-            throw RetailBoosterError.notInitialized
+            throw RtBError.notInitialized
         }
 
         guard let userId = config.userId, let crypto = config.crypto else {
-            throw RetailBoosterError.userInfoNotSet
+            throw RtBError.userInfoNotSet
         }
 
         Log.info("Loading reward ads for tagGroupId: \(tagGroupId)", context: "RtBRewardAd")
@@ -100,7 +100,7 @@ public class RtBRewardAd: ViewableAd {
 
     // Test init - inject mock ViewModel
     #if DEBUG
-    internal init(tagGroupId: String, eventName: String? = nil, options: RewardOptions? = nil, callback: RewardCallback = RewardCallback(), mockViewModel: AdViewModel) {
+    internal init(tagGroupId: String, eventName: String? = nil, options: RtBRewardOptions? = nil, callback: RtBRewardCallback = RtBRewardCallback(), mockViewModel: AdViewModel) {
         self.tagGroupId = tagGroupId
         self.eventName = eventName
         self.options = options
