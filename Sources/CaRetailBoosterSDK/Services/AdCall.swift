@@ -98,9 +98,11 @@ struct AdsRequest: Codable {
 
     struct TagInfo: Codable {
         let tagGroupId: String
+        let eventName: String?
 
         enum CodingKeys: String, CodingKey {
             case tagGroupId = "tag_group_id"
+            case eventName = "event_name"
         }
     }
 
