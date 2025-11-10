@@ -17,8 +17,11 @@ class AdViewModel: ObservableObject {
 
     @Published var activeModal: ModalType = .none
     @Published var currentAd: Reward?
-    @Published public var callback: Callback?
-    @Published public var options: Options?
+    @Published public var rewardCallback: RtBRewardCallback?
+    @Published public var popupCallback: RtBPopupCallback?
+    @Published public var bannerOptions: RtBBannerOptions?
+    @Published public var rewardOptions: RtBRewardOptions?
+    @Published public var popupOptions: RtBPopupOptions?
     
     // 強制リフレッシュ用プロパティ
     @Published public var forceRefreshToken = UUID()
@@ -33,32 +36,77 @@ class AdViewModel: ObservableObject {
     let userId: String
     let crypto: String
     let tagGroupId: String
-    let runMode: RunMode
-    
-    public init(mediaId: String, userId: String, crypto: String, tagGroupId: String, runMode: RunMode, callback: Callback? = nil, options: Options? = nil) {
+    let runMode: RtBRunMode
+    let eventName: String?
+
+    // Banner広告用 init
+    public init(
+        mediaId: String,
+        userId: String,
+        crypto: String,
+        tagGroupId: String,
+        runMode: RtBRunMode,
+        eventName: String? = nil,
+        bannerOptions: RtBBannerOptions? = nil
+    ) {
         self.mediaId = mediaId
         self.userId = userId
         self.crypto = crypto
         self.tagGroupId = tagGroupId
         self.runMode = runMode
-        
-        if let callback = callback {
-            self.callback = callback
-        }
-        if let options = options {
-            self.options = options
-        }
+        self.eventName = eventName
+        self.bannerOptions = bannerOptions
+    }
+
+    // Reward広告用 init
+    public init(
+        mediaId: String,
+        userId: String,
+        crypto: String,
+        tagGroupId: String,
+        runMode: RtBRunMode,
+        eventName: String? = nil,
+        rewardCallback: RtBRewardCallback? = nil,
+        rewardOptions: RtBRewardOptions? = nil
+    ) {
+        self.mediaId = mediaId
+        self.userId = userId
+        self.crypto = crypto
+        self.tagGroupId = tagGroupId
+        self.runMode = runMode
+        self.eventName = eventName
+        self.rewardCallback = rewardCallback
+        self.rewardOptions = rewardOptions
+    }
+
+    // Popup広告用 init
+    public init(
+        mediaId: String,
+        userId: String,
+        crypto: String,
+        tagGroupId: String,
+        runMode: RtBRunMode,
+        eventName: String? = nil,
+        popupCallback: RtBPopupCallback? = nil,
+        popupOptions: RtBPopupOptions? = nil
+    ) {
+        self.mediaId = mediaId
+        self.userId = userId
+        self.crypto = crypto
+        self.tagGroupId = tagGroupId
+        self.runMode = runMode
+        self.eventName = eventName
+        self.popupCallback = popupCallback
+        self.popupOptions = popupOptions
     }
     
     public func fetchAdsWithUIUpdate() async {
-        #if DEBUG
-        print("[AdViewModel] fetchAdsWithUIUpdate called at \(Date()) for tagGroupId: \(tagGroupId)")
-        #endif
+        Log.debug("fetchAdsWithUIUpdate called at \(Date()) for tagGroupId: \(tagGroupId)", context: "AdViewModel")
         do {
             let body = RewardAdsRequestBody(
                 user: .init(id: userId),
                 publisher: .init(id: mediaId, crypto: crypto),
-                tagInfo: .init(tagGroupId: tagGroupId),
+                tagInfo: .init(tagGroupId: tagGroupId, eventName: eventName),
                 device: .init(make: DeviceInfo.make, os: DeviceInfo.os, osv: DeviceInfo.osVersion, hwv: DeviceInfo.hwv, h: DeviceInfo.height, w: DeviceInfo.width, language: DeviceInfo.language, ifa: DeviceInfo.ifa)
             )
            
@@ -88,7 +136,7 @@ class AdViewModel: ObservableObject {
                 preloadWebViews()
             }
         } catch {
-            print("[AdViewModel] Error fetching ads: \(error)")
+            Log.error("Error fetching ads: \(error)", context: "AdViewModel")
             NotificationCenter.default.post(name: NSNotification.Alert, object: nil)
         }
     }
@@ -132,17 +180,13 @@ class AdViewModel: ObservableObject {
     
     private func preloadWebViews() {
         guard let adType = adType else {
-            #if DEBUG
-            print("[AdViewModel] No adType set, skipping preload")
-            #endif
+            Log.debug("No adType set, skipping preload", context: "AdViewModel")
             return
         }
-        
+
         switch adType {
         case .REWARD:
-            #if DEBUG
-            print("[AdViewModel] Preloading WebViews for \(rewardAds.count) reward ads")
-            #endif
+            Log.debug("Preloading WebViews for \(rewardAds.count) reward ads", context: "AdViewModel")
             for ad in rewardAds {
                 let vm = BaseWebViewVM(ad: ad, rewardVm: self)
                 let key = "reward_\(ad.ad_id)_\(ad.param)"
@@ -150,11 +194,9 @@ class AdViewModel: ObservableObject {
                 // 非同期でロード開始
                 vm.loadWebPageOnce(webResource: ad.webview_url.contents)
             }
-            
+
         case .BANNER:
-            #if DEBUG
-            print("[AdViewModel] Preloading WebViews for \(bannerAds.count) banner ads")
-            #endif
+            Log.debug("Preloading WebViews for \(bannerAds.count) banner ads", context: "AdViewModel")
             for ad in bannerAds {
                 let vm = BaseWebViewVM(bannerAd: ad)
                 let key = "banner_\(ad.ad_id)_\(ad.param)"
@@ -162,38 +204,34 @@ class AdViewModel: ObservableObject {
                 // 非同期でロード開始
                 vm.loadWebPageOnce(webResource: ad.webview_url)
             }
+        case .POPUP:
+            break
         }
     }
     
     func getOrCreateRewardVM(for ad: Reward) -> BaseWebViewVM {
         let key = "reward_\(ad.ad_id)_\(ad.param)"
         if let cached = webViewVMCache[key] {
-            #if DEBUG
-            print("[AdViewModel] Using cached VM for reward ad \(ad.ad_id)")
-            #endif
+            Log.debug("Using cached VM for reward ad \(ad.ad_id)", context: "AdViewModel")
             return cached
         }
         // フォールバック（キャッシュミス時）
-        #if DEBUG
-        print("[AdViewModel] Cache miss, creating new VM for reward ad \(ad.ad_id)")
-        #endif
+        Log.debug("Cache miss, creating new VM for reward ad \(ad.ad_id)", context: "AdViewModel")
         let vm = BaseWebViewVM(ad: ad, rewardVm: self)
+        webViewVMCache[key] = vm
         return vm
     }
-    
+
     func getOrCreateBannerVM(for ad: Banner) -> BaseWebViewVM {
         let key = "banner_\(ad.ad_id)_\(ad.param)"
         if let cached = webViewVMCache[key] {
-            #if DEBUG
-            print("[AdViewModel] Using cached VM for banner ad \(ad.ad_id)")
-            #endif
+            Log.debug("Using cached VM for banner ad \(ad.ad_id)", context: "AdViewModel")
             return cached
         }
         // フォールバック（キャッシュミス時）
-        #if DEBUG
-        print("[AdViewModel] Cache miss, creating new VM for banner ad \(ad.ad_id)")
-        #endif
+        Log.debug("Cache miss, creating new VM for banner ad \(ad.ad_id)", context: "AdViewModel")
         let vm = BaseWebViewVM(bannerAd: ad)
+        webViewVMCache[key] = vm
         return vm
     }
 }

@@ -25,8 +25,8 @@ struct BannerAd: View {
                 vm.loadWebPageOnce(webResource: ad.webview_url)
             })
             .frame(
-                width: adVm.options?.size?.width ?? CGFloat(ad.width),
-                height: adVm.options?.size?.height ?? CGFloat(ad.height)
+                width: adVm.bannerOptions?.size?.width ?? CGFloat(ad.width),
+                height: adVm.bannerOptions?.size?.height ?? CGFloat(ad.height)
             )
             .onDisappear(perform: {
                 vm.stopTracking()

@@ -55,6 +55,7 @@ struct GetRewardResponse {
 enum AdType: String {
     case BANNER
     case REWARD
+    case POPUP
 }
 
 struct TagGroup: Decodable {
@@ -97,9 +98,11 @@ struct AdsRequest: Codable {
 
     struct TagInfo: Codable {
         let tagGroupId: String
+        let eventName: String?
 
         enum CodingKeys: String, CodingKey {
             case tagGroupId = "tag_group_id"
+            case eventName = "event_name"
         }
     }
 
@@ -133,26 +136,22 @@ typealias RewardAdsRequestBody = AdsRequest
 
 @MainActor
 @available(iOS 13.0, *)
-func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws -> GetRewardResponse {
-    #if DEBUG
-    print("[AdCall] API Call: getAds called at \(Date()) for tagGroupId: \(body.tagInfo.tagGroupId)")
-    #endif
+func getAds(runMode: RtBRunMode, body: RewardAdsRequestBody) async throws -> GetRewardResponse {
+    Log.debug("API Call: getAds called at \(Date()) for tagGroupId: \(body.tagInfo.tagGroupId)", context: "AdCall")
     let url: String
     switch runMode {
-    case RunMode.dev:
+    case RtBRunMode.dev:
         url = Const.DEV_AD_SERVER_URL
-    case RunMode.stg:
+    case RtBRunMode.stg:
         url = Const.STG_AD_SERVER_URL
-    case RunMode.prd:
+    case RtBRunMode.prd:
         url = Const.PRD_AD_SERVER_URL
-    case RunMode.mock:
+    case RtBRunMode.mock:
         url = Const.MOCK_AD_SERVER_URL
     default:
         url = Const.LOCAL_AD_SERVER_URL
     }
-    #if DEBUG
-    print("[AdCall] API Call: URL: \(url)")
-    #endif
+    Log.debug("API Call: URL: \(url)", context: "AdCall")
     guard let components = URLComponents(string: url),
           let url = components.url else {
         throw URLError(.badURL)
@@ -184,6 +183,9 @@ func getAds(runMode: RunMode, body: RewardAdsRequestBody) async throws -> GetRew
     } else if res.ad_type == AdType.REWARD.rawValue {
         let rewardAds = try JSONDecoder().decode(RewardAds.self, from: data)
         return GetRewardResponse(adType: .REWARD, tagGroup: rewardAds.tagGroup, rewardAds: rewardAds.ads, bannerAds: [])
+    } else if res.ad_type == AdType.POPUP.rawValue {
+        // TODO: - Popup ads will be handled separately in future implementation
+        return GetRewardResponse(adType: nil, tagGroup: nil, rewardAds: [], bannerAds: [])
     }
 
     return GetRewardResponse(adType: nil, tagGroup: nil, rewardAds: [], bannerAds: [])

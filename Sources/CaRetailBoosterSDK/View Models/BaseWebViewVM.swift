@@ -48,6 +48,9 @@ class BaseWebViewVM: ObservableObject {
     // WebViewロード済みフラグ（onAppear多重実行防止）
     private var isLoaded: Bool = false
 
+    // WebViewエラーフラグ（エラーが発生した広告を除外するため）
+    var hasError: Bool = false
+
     // init for banner
     init(bannerAd: Banner) {
         self.bannerAd = bannerAd
@@ -61,7 +64,7 @@ class BaseWebViewVM: ObservableObject {
     
     func loadWebPage(webResource: String) {
         guard let url = URL(string: webResource) else {
-            print("[BaseWebViewVM] Bad URL")
+            Log.error("Bad URL", context: "BaseWebViewVM")
             return
         }
         let request = URLRequest(url: url)
@@ -70,9 +73,7 @@ class BaseWebViewVM: ObservableObject {
     
     func loadWebPageOnce(webResource: String) {
         guard !isLoaded else {
-            #if DEBUG
-            print("[BaseWebViewVM] WebView already loaded, skipping reload")
-            #endif
+            Log.debug("WebView already loaded, skipping reload", context: "BaseWebViewVM")
             return
         }
         loadWebPage(webResource: webResource)
@@ -99,10 +100,10 @@ class BaseWebViewVM: ObservableObject {
             rewardVm?.closeModal()
         case .onMarkSuccess:
             // マーク完了をSDKユーザーに通知
-            rewardVm?.callback?.onMarkSucceeded()
+            rewardVm?.rewardCallback?.onMarkSucceeded?()
         case .onRewardFinish:
             // リワード獲得をSDKユーザーに通知
-            rewardVm?.callback?.onRewardModalClosed()
+            rewardVm?.rewardCallback?.onRewardModalClosed?()
         case .fetchAds:
             // 広告を取得
             Task {
@@ -121,9 +122,10 @@ class BaseWebViewVM: ObservableObject {
             }
             UIApplication.shared.open(url, options: [:]) { success in
                 if !success {
-                    print("[BaseWebViewVM] Failed to open URL: \(urlString)")
+                    Log.error("Failed to open URL: \(urlString)", context: "BaseWebViewVM")
+                } else {
+                    Log.info("Opened URL: \(urlString)", context: "BaseWebViewVM")
                 }
-                print("[BaseWebViewVM] Opened URL: \(urlString)")
             }
         }
     }
@@ -135,6 +137,8 @@ class BaseWebViewVM: ObservableObject {
             ad?.param
         case .BANNER:
             bannerAd?.param
+        case .POPUP:
+            nil
         }
         
         // BannerAdの場合は重複チェックなし、RewardAdの場合のみ重複チェック
@@ -151,6 +155,8 @@ class BaseWebViewVM: ObservableObject {
         case .BANNER:
             // BannerAdは重複チェックなし
             param != nil
+            case .POPUP:
+            false
         }
         
         if shouldEnableTracking {
@@ -160,6 +166,8 @@ class BaseWebViewVM: ObservableObject {
                 ad?.imp_url ?? ""
             case .BANNER:
                 bannerAd?.imp_url ?? ""
+            case .POPUP:
+                ""
             }
             self.trackingParam = param
             
@@ -169,16 +177,14 @@ class BaseWebViewVM: ObservableObject {
                 ad?.ad_id
             case .BANNER:
                 bannerAd?.ad_id
+            case .POPUP:
+                nil
             }
-            
-            #if DEBUG
+
             let adId = trackingAdId ?? 0
-            print("[BaseWebViewVM] Impression tracking enabled for \(adType) ad (ID: \(adId), endpoint: \(trackingEndpoint ?? "nil"))")
-            #endif
+            Log.debug("Impression tracking enabled for \(adType) ad (ID: \(adId), endpoint: \(trackingEndpoint ?? "nil"))", context: "BaseWebViewVM")
         } else {
-            #if DEBUG
-            print("[BaseWebViewVM] Impression tracking NOT enabled for \(adType) ad - conditions not met")
-            #endif
+            Log.debug("Impression tracking NOT enabled for \(adType) ad - conditions not met", context: "BaseWebViewVM")
         }
     }
     

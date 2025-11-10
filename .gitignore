@@ -8,6 +8,7 @@ xcuserdata/
 build/
 Examples/build/
 DerivedData/
+.build/
 
 # Xcode
 *.xcodeproj/*

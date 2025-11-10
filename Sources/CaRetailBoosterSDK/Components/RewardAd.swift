@@ -27,9 +27,9 @@ struct RewardAd: View {
                 // 既に事前ロード済みの場合はスキップされる
                 vm.loadWebPageOnce(webResource: ad.webview_url.contents)
             })
-            .frame(width: adVm.options?.size?.width ?? 173, height: adVm.options?.size?.height ?? 210)
+            .frame(width: adVm.rewardOptions?.size?.width ?? 173, height: adVm.rewardOptions?.size?.height ?? 210)
             .onReceive(NotificationCenter.default.publisher(for: NSNotification.Alert)) { data in
-                print("[RewardAd] Alert notification received")
+                Log.debug("Alert notification received", context: "RewardAd")
                 // TODO: エラー通知
                 showErrorAlert = true
             }

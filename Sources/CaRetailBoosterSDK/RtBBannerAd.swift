@@ -1,0 +1,96 @@
+import Foundation
+import SwiftUI
+
+@MainActor
+@available(iOS 13.0, *)
+public class RtBBannerAd: ViewableAd {
+    public let tagGroupId: String
+    public let eventName: String?
+    public let options: RtBBannerOptions?
+
+    public var areaName: String? {
+        viewModel?.areaName
+    }
+
+    public var areaDescription: String? {
+        viewModel?.areaDescription
+    }
+
+    private var viewModel: AdViewModel?
+    private var isLoaded: Bool = false
+
+    public init(tagGroupId: String, eventName: String? = nil, options: RtBBannerOptions? = nil) {
+        self.tagGroupId = tagGroupId
+        self.eventName = eventName
+        self.options = options
+
+        Log.debug("Initialized with tagGroupId: \(tagGroupId)", context: "RtBBannerAd")
+    }
+
+    public func load() async throws {
+        guard let config = RetailBooster.currentConfig else {
+            throw RtBError.notInitialized
+        }
+
+        guard let userId = config.userId, let crypto = config.crypto else {
+            throw RtBError.userInfoNotSet
+        }
+
+        Log.info("Loading banner ads for tagGroupId: \(tagGroupId)", context: "RtBBannerAd")
+
+        await MainActor.run {
+            self.viewModel = AdViewModel(
+                mediaId: config.mediaId,
+                userId: userId,
+                crypto: crypto,
+                tagGroupId: tagGroupId,
+                runMode: config.mode,
+                eventName: self.eventName,
+                bannerOptions: self.options
+            )
+        }
+
+        await viewModel?.fetchAdsWithUIUpdate()
+        isLoaded = true
+
+        let adCount = viewModel?.bannerAds.count ?? 0
+        Log.info("Loaded \(adCount) banner ads", context: "RtBBannerAd")
+        let areaName = viewModel?.areaName
+        let areaDescription = viewModel?.areaDescription
+        Log.info("Area name: \(areaName ?? ""), Area description: \(areaDescription ?? "")", context: "RtBBannerAd")
+    }
+
+    public var views: [AnyView] {
+        guard isLoaded, let vm = viewModel else {
+            return []
+        }
+
+        return vm.bannerAds.compactMap { ad in
+            let webViewVM = vm.getOrCreateBannerVM(for: ad)
+            // エラーが発生したWebViewは除外
+            guard !webViewVM.hasError else {
+                Log.debug("Excluding banner ad \(ad.ad_id) due to WebView error", context: "RtBBannerAd")
+                return nil
+            }
+            return AnyView(BannerAd(ad: ad).environmentObject(vm))
+        }
+    }
+
+    deinit {
+        let vm = self.viewModel
+        Task { @MainActor in
+            vm?.resetImpressionSentAdIds()
+        }
+    }
+
+    // Test init - inject mock ViewModel
+    #if DEBUG
+    internal init(tagGroupId: String, eventName: String? = nil, options: RtBBannerOptions? = nil, mockViewModel: AdViewModel) {
+        self.tagGroupId = tagGroupId
+        self.eventName = eventName
+        self.options = options
+        self.viewModel = mockViewModel
+        self.isLoaded = true
+    }
+    #endif
+}

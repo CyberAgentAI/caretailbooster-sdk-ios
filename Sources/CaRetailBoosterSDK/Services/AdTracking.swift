@@ -14,11 +14,9 @@ struct AdTracking {
         guard let url = components.url else {
             throw URLError(.badURL)
         }
-        
-        #if DEBUG
-        print("[AdTracking] Sending impression request to: \(url)")
-        #endif
-        
+
+        Log.debug("Sending impression request to: \(url)", context: "AdTracking")
+
         let (_, response) = try await URLSession.shared.data(from: url)
         
         // if not 200, throw error
@@ -27,15 +25,11 @@ struct AdTracking {
         }
         
         guard httpResponse.statusCode == 200 else {
-            #if DEBUG
-            print("[AdTracking] Impression request failed with status code: \(httpResponse.statusCode)")
-            #endif
+            Log.error("Impression request failed with status code: \(httpResponse.statusCode)", context: "AdTracking")
             throw URLError(.badServerResponse)
         }
-        
-        #if DEBUG
-        print("[AdTracking] Impression request successful for param: \(param)")
-        #endif
+
+        Log.debug("Impression request successful for param: \(param)", context: "AdTracking")
     }
     
     @MainActor
@@ -73,11 +67,9 @@ struct AdTracking {
     @MainActor
     static func trackImpression(webView: WKWebView, endpoint: String, param: String, adId: Int) {
         let trackingKey = "impression_\(adId)_\(param)"
-        
-        #if DEBUG
-        print("[AdTracking] Starting impression tracking for ad ID: \(adId), param: \(param)")
-        #endif
-        
+
+        Log.debug("Starting impression tracking for ad ID: \(adId), param: \(param)", context: "AdTracking")
+
         // すでに動いているタイマーがあれば停止
         TimerManager.shared.stopTimer(for: trackingKey)
         
@@ -103,7 +95,7 @@ struct AdTracking {
                         do {
                             try await impression(endpoint: endpoint, param: param)
                         } catch {
-                            print("[AdTracking] Failed to track impression: \(error)")
+                            Log.error("Failed to track impression: \(error)", context: "AdTracking")
                         }
                     }
                 }

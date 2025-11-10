@@ -1,6 +1,6 @@
 import Foundation
 
-public enum RunMode: String {
+public enum RtBRunMode: String {
     case local
     case dev
     case stg

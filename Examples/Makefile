@@ -2,7 +2,7 @@
 # This is a simple wrapper around build.sh for convenience
 # Note: For custom simulators, use ./build.sh directly
 
-.PHONY: help build clean run list release
+.PHONY: help build clean run list release test
 
 # Default target
 help:
@@ -11,6 +11,7 @@ help:
 	@echo "Targets:"
 	@echo "  build    - Build for default simulator (iPhone 16 Pro)"
 	@echo "  run      - Build and run on default simulator"
+	@echo "  test     - Run SDK tests"
 	@echo "  release  - Build release version"
 	@echo "  clean    - Clean build directory"
 	@echo "  list     - List available simulators"
@@ -41,3 +42,7 @@ list:
 # List booted simulators
 list-booted:
 	@./script/build.sh list-booted
+
+# Run tests
+test:
+	@cd .. && make test
